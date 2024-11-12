@@ -1,11 +1,17 @@
 import logo from './logo.svg';
 import './App.css';
+import MainRouter from './routes/MainRouter';
+import { BrowserRouter as Router } from 'react-router-dom';
+import Navbar from './components/Navbar';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+    <Router>
+      <div className="App">
+        <Navbar />
+        <header className="App-header">
+          <MainRouter />
+          {/* <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
@@ -16,9 +22,10 @@ function App() {
           rel="noopener noreferrer"
         >
           Learn React
-        </a>
-      </header>
-    </div>
+        </a> */}
+        </header>
+      </div>
+    </Router>
   );
 }
 
