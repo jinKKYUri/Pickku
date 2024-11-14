@@ -378,7 +378,6 @@
     "iterator.prototype": "^1.1.3",
     "jackspeak": "^3.4.3",
     "jake": "^10.9.2",
-    "jest": "^27.5.1",
     "jest-changed-files": "^27.5.1",
     "jest-circus": "^27.5.1",
     "jest-cli": "^27.5.1",
@@ -471,6 +470,7 @@
     "mkdirp": "^0.5.6",
     "ms": "^2.1.3",
     "multicast-dns": "^7.2.5",
+    "mysql2": "^3.11.4",
     "mz": "^2.7.0",
     "nanoid": "^3.3.7",
     "natural-compare": "^1.4.0",
@@ -842,7 +842,7 @@
     "yocto-queue": "^0.1.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -854,5 +854,8 @@
   "bugs": {
     "url": "https://github.com/jinKKYUri/Pickku/issues"
   },
-  "homepage": "https://github.com/jinKKYUri/Pickku#readme"
+  "homepage": "https://github.com/jinKKYUri/Pickku#readme",
+  "devDependencies": {
+    "jest": "^28.1.3"
+  }
 }
