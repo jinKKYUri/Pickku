@@ -1,11 +1,17 @@
-// controllers/authController.js
 const { registerUser, authenticateUser } = require('../services/authService');
 
 // 회원가입
 async function signup(req, res) {
-  const { username, password } = req.body;
+  const { username, nickname, email, password, phone_number } = req.body;
   try {
-    await registerUser(username, password);
+    const userData = {
+      username, 
+      nickname, 
+      email, 
+      password, 
+      phone_number
+    };
+    await registerUser(userData);
     res.status(201).json({ message: '회원가입 성공' });
   } catch (error) {
     res.status(400).json({ message: error.message });

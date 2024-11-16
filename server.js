@@ -5,7 +5,6 @@ const cors = require("cors");
 
 const authRoutes = require('./routes/authRoutes');
 const protectedRoutes = require('./routes/protectedRoutes');
-const testRoutes = require("./routes/testRoutes");
 
 dotenv.config();  // 환경 변수 로드
 
@@ -28,10 +27,6 @@ app.use('/auth', authRoutes);
 
 // 인증된 사용자만 접근할 수 있는 보호된 라우트
 app.use('/protected', protectedRoutes);
-
-//테스트용 라우트
-app.use('/test',testRoutes);
-
 
 
 app.get('/', (req, res) => {
