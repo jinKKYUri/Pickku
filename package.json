@@ -119,6 +119,7 @@
     "core-js-compat": "^3.39.0",
     "core-js-pure": "^3.39.0",
     "core-util-is": "^1.0.3",
+    "cors": "^2.8.5",
     "cosmiconfig": "^7.1.0",
     "cross-spawn": "^7.0.4",
     "crypto-random-string": "^2.0.0",
@@ -858,6 +859,7 @@
   },
   "homepage": "https://github.com/jinKKYUri/Pickku#readme",
   "devDependencies": {
-    "jest": "^28.1.3"
+    "jest": "^28.1.3",
+    "supertest": "^7.0.0"
   }
 }

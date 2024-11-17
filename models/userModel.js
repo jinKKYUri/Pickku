@@ -3,8 +3,6 @@ const db = require("../config/db");
 // 사용자 생성 함수(기본 사용자 정보)
 async function createUser(userData) {
     const { username, email, password } = userData;
-    
-    console.log(userData);
     return new Promise((resolve, reject) => {
         const query = "INSERT INTO users_tb (username, email, password) VALUES (?, ?, ?)";
         db.query(query, [username, email, password], (err, result) => {
@@ -31,4 +29,13 @@ async function getUserByUsername(username) {
     });
 }
 
-module.exports = { createUser, getUserByUsername };
+async function deleteUser(userId){
+    return new Promise((resolve, reject) => {
+        const query = "DELETE FROM users_tb WHERE id = ?";
+        db.query(query, [userId], (err, result) => {
+        if (err) reject(err);
+        else resolve(result);
+        });
+    });    
+}
+module.exports = { createUser, getUserByUsername, deleteUser };

@@ -53,7 +53,7 @@ async function authenticateUser(username, password) {
 
     // JWT 토큰 생성
     const token = jwt.sign(
-        { id: user.id, username: user.username },
+        { id: user.id, role: user.role },
         process.env.JWT_SECRET,
         {
         expiresIn: "1h",
