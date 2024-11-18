@@ -1,0 +1,126 @@
+.css-zoj6jx {
+    position: relative;
+    height: 280px;
+    overflow: hidden;
+    margin-top: 50px;
+}
+.css-533jkm {
+    width: 1200px;
+    padding: 0 16px;
+    margin: 0 auto;
+}
+.css-wjsi2e {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    height: 48px;
+}
+.css-17eg8cf {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    position: relative;
+    height: 48px;
+}
+
+.css-70qvj9 {
+    -webkit-box-align: center;
+    align-items: center;
+}
+.css-1o9jlhu {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    margin: 0px;
+    padding: 0px;
+    justify-content: space-evenly;
+}
+
+.css-nw97ew {
+    display: flex;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    justify-content: center;
+    position: relative;
+    margin-right: 20px;
+}
+
+.css-1hix25n {
+    text-decoration: none;
+    display: flex;
+    gap: 2px;
+}
+
+.css-1rps1q {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    position: relative;
+    height: 48px;
+}
+.css-b2qmlw {
+    margin: 0px;
+    color: rgb(33, 34, 36);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0px;
+}
+
+.css-1yc2531 {
+    height: 4px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+.css-uwwqev {
+    width: 100%;
+    height: 100%;
+}
+
+.css-eisj2f {
+    width: 100%;
+    height: 100%;
+    background-color: rgb(0, 0, 0);
+}
+
+.css-1c84t9u {
+    position: absolute !important;
+    -webkit-transform: translateX(calc((100vw - 2148px) / 2));
+    -moz-transform: translateX(calc((100vw - 2148px) / 2));
+    -ms-transform: translateX(calc((100vw - 2148px) / 2));
+    transform: translateX(calc((100vw - 2148px) / 2));
+    width: 2148px !important;
+    margin: 0;
+    padding: 0;
+}
+
+
+.css-1ux6evm {
+    -webkit-transition: opacity 200ms linear;
+    transition: opacity 200ms linear;
+    /* background-color: rgba(0,0,0,1); */
+    width: 700px;
+    height: 280px;
+    position: absolute;
+    opacity: 0.5;
+    border-radius: 16px;
+}
+.css-rrh101 {
+    display: block;
+    border-radius: 16px;
+    height: 100%;
+}

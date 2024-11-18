@@ -1,0 +1,99 @@
+.css-1q92bbj {
+    position: absolute;
+    left: calc((100vw - 703px) / 2);
+    width: 700px;
+    height: 280px;
+    margin: 0px auto;
+    pointer-events: none;
+}
+.css-rydnei {
+    position: relative;
+    width: 700px;
+    height: 280px;
+}
+.css-miua68 {
+    position: absolute;
+    left: 8px;
+    bottom: 124px;
+    pointer-events: auto;
+}
+
+.css-1pjhykp {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    background-color: #ffffff;
+    opacity: 0.5;
+    border-radius: 50%;
+    border: none;
+    box-shadow: 0 0 0 1px transparent, 0 0 0 4px transparent, 0 2px 4px rgba(0 0 0 / 18%);
+    cursor: pointer;
+}
+.css-v8z8o7 {
+    display: inline-block;
+    color: inherit;
+    font-style: normal;
+    line-height: 0;
+    text-align: center;
+    text-transform: none;
+    vertical-align: -0.125em;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #212224;
+}
+.css-7kp13n {
+    display: inline-block;
+}
+.css-daswnk {
+    position: absolute;
+    right: 8px;
+    bottom: 124px;
+    pointer-events: auto;
+}
+.css-ylpw5g {
+    position: absolute;
+    bottom: 16px;
+    left: 620px;
+    min-width: 64px;
+    padding: 4px 8px;
+    height: 28px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    border-radius: 14px;
+    background-color: rgba(0, 0, 0, 0.4);
+    font-size: 13px;
+    line-height: 15px;
+    pointer-events: auto;
+}
+.css-1smue61 {
+    color: #ffffff;
+}
+.css-14eozc2 {
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0 2px;
+}
+.css-3s7ibm {
+    color: rgba(255, 255, 255, 0.5);
+}
