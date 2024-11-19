@@ -7,6 +7,7 @@ function Login() {
     const [token,setToken] =useState('');
     const navigate = useNavigate();
     const [error, setError] = useState(null);
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -22,6 +23,7 @@ function Login() {
             setError(error.response?.data?.message || '로그인 실패');
         }
     };
+    
     return (
         <>
             <form onSubmit={handleSubmit} class="px-4 py-3">

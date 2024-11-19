@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import { loginUser } from '../services/AuthService';
 
 const LoginForm = () => {
     const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');    const navigate = useNavigate();
+    const [password, setPassword] = useState('');    
+    const navigate = useNavigate();
 
     const isFormValid = username.trim() !== "" && password.trim() !== "";
 
@@ -87,10 +88,12 @@ const LoginForm = () => {
                 </button>
             </div>
             </div>
-            <button className="mx-auto mt-[20px] block text-center text-sm text-gray-700 space-x-[10px]">
+            {/* <button className="mx-auto mt-[20px] block text-center text-sm text-gray-700 space-x-[10px]"> */}
+            <div className="mx-auto mt-[20px] block text-center text-sm text-gray-700 space-x-[10px]">
             <span>계정이 없으신가요?</span>
-            <span className="font-semibold underline">회원가입 하기</span>
-            </button>
+            <Link to="/SignUp"><span className="font-semibold underline">회원가입 하기</span></Link>
+            </div>
+            {/* </button> */}
         </div>
         </div>
     );
