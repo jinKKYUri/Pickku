@@ -15,9 +15,9 @@ const loginUser = async (username, password) => {
 };
 
 // 회원가입 요청을 처리하는 서비스 함수
-const signupUser = async (username, password, email, ) => {
+const signupUser = async (username, password, email, phone) => {
   try {
-    const response = await axios.post('/auth/signup', { username, password, email });
+    const response = await axios.post('/auth/signup', { username, password, email ,phone});
     return response.data;
   } catch (error) {
     if (error.response) {
