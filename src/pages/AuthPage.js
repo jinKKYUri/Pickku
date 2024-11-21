@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
 import LoginForm from '../components/LoginForm';
 import Header from '../components/Header';
 const AuthPage = ({ type }) => {
