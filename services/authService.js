@@ -5,37 +5,28 @@ const jwt = require("jsonwebtoken");
 
 // 회원가입 서비스
 async function registerUser(userData) {
-    const { username, nickname, email, password, phone_number } = userData;
+    const { userId, email, password, phone } = userData;
 
     // 사용자명 중복 확인
-    const existingUser = await getUserByUsername(username);
+    const existingUser = await getUserByUsername(userId);
     if (existingUser) {
-        throw new Error("이미 존재하는 사용자입니다.");
+        throw new Error("이미 존재하는 아이디입니다.");
     }
 
-    // 닉네임 중복 확인
-    const existingUserByNickname = await getUserByNickname(nickname);
-    if (existingUserByNickname) {
-        throw new Error("이미 존재하는 닉네임입니다.");
-    }
-        
     // 비밀번호 해시 및 사용자 생성
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // 1단계: users_tb에 사용자 기본 정보 저장
-    const newUser = await createUser({ username, email, password: hashedPassword });
+    const newUser = await createUser({ userId, email, phone, password: hashedPassword });
 
-    // 2단계: profiles_tb에 프로필 정보 저장 (user_id를 users_tb에서 생성된 id로 설정)
-    const profileData = {
-        user_id: newUser.id, // users_tb에서 생성된 user_id
-        nickname,
-        phone_number,
-        profile_picture: 'default.png' // 기본 프로필 사진 경로
-    };
-    await createUserProfile(profileData);
-    
+
     return newUser;
 }
+
+// 프로필 서비스
+// async function setProfile(nickname,content,img){
+
+//}
 
 // 로그인 서비스
 async function authenticateUser(username, password) {
@@ -56,7 +47,7 @@ async function authenticateUser(username, password) {
         { id: user.id, role: user.role },
         process.env.JWT_SECRET,
         {
-        expiresIn: "1h",
+            expiresIn: "1h",
         }
     );
     return token;
