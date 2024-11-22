@@ -38,7 +38,7 @@ async function registProfileService(userData) {
 }
 
 // 로그인 서비스
-async function authenticateUser(userId, password) {
+async function authenticateUserService(userId, password) {
     // 사용자 조회
     const user = await getUserIdModel(userId);
     if (!user) {
@@ -62,4 +62,4 @@ async function authenticateUser(userId, password) {
     return token;
 }
 
-module.exports = { registUserService, authenticateUser, registProfileService };
+module.exports = { registUserService, authenticateUserService, registProfileService };

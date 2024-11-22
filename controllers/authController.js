@@ -1,4 +1,4 @@
-const { authenticateUser, registUserService, registProfileService } = require('../services/authService');
+const { registUserService, registProfileService, authenticateUserService } = require('../services/authService');
 
 // 회원가입
 async function registUserController(req, res) {
@@ -34,14 +34,14 @@ async function registProfileController(req,res){
 }
 
 // 로그인
-async function login(req, res) {
+async function authenticateUserController(req, res) {
   const { userId, userPw } = req.body;
   try {
-    const token = await authenticateUser(userId, userPw);
+    const token = await authenticateUserService(userId, userPw);
     res.status(200).json({ message: '로그인 성공', token });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 }
 
-module.exports = { registUserController, login ,registProfileController};
+module.exports = { registUserController, authenticateUserController ,registProfileController};
