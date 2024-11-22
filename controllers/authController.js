@@ -1,7 +1,7 @@
-const { registerUser, authenticateUser } = require('../services/authService');
+const { authenticateUser, registUserService, registProfileService } = require('../services/authService');
 
 // 회원가입
-async function signup(req, res) {
+async function registUserController(req, res) {
   const { userId, email, phone, password  } = req.body;
   try {
     const userData = {
@@ -10,22 +10,38 @@ async function signup(req, res) {
       password, 
       phone
     };
-    await registerUser(userData);
+    await registUserService(userData);
     res.status(200).json({ message: '회원가입 성공' });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 }
 
+//프로필 저장
+async function registProfileController(req,res){
+  const {userNick,userContent,userImg} = req.body;
+  try{
+    const userData = {
+      userNick,
+      userContent,
+      userImg
+    }
+    await registProfileService(userData);
+    res.status(200).json({ message: '회원가입 성공' });
+  }catch(error){
+    res.status(400).json({ message: error.message });
+  }
+}
+
 // 로그인
 async function login(req, res) {
-  const { username, password } = req.body;
+  const { userId, userPw } = req.body;
   try {
-    const token = await authenticateUser(username, password);
+    const token = await authenticateUser(userId, userPw);
     res.status(200).json({ message: '로그인 성공', token });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 }
 
-module.exports = { signup, login };
+module.exports = { registUserController, login ,registProfileController};
