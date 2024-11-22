@@ -28,9 +28,9 @@ const signUpUser = async (userId, password, email, phone) => {
   }
 };
 
-const setProfile = async (nickname,content) =>{
+const setProfile = async (nickname,content,userImg) =>{
   try{
-    const response = await axios.post('/auth/setprofile', { nickname,content});
+    const response = await axios.post('http://wlsrb3469.iptime.org:8002/auth/signup', { nickname,content,userImg});
     return response.data;
   }catch(error){
     if (error.response) {

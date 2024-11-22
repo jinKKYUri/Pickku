@@ -9,17 +9,17 @@ import { setProfile } from '../services/AuthService';
 function SetProfile() {
     const [nickname, setNickName] = useState('');
     const [content, setContent] = useState('');
-    const [profileImg,setProfileImg] = useState('');
+    const [profileImg, setProfileImg] = useState('');
     const navigate = useNavigate();
 
     const isFormValid = nickname.trim() !== "" && content.trim() !== "";
 
 
-    const handleSignUp = async (e) => {
+    const handleSetProfile = async (e) => {
         e.preventDefault();
         try {
-                const response = await setProfile(nickname,content,profileImg); // signupUser 호출
-            
+            const response = await setProfile(nickname, content, profileImg); // signupUser 호출
+
         } catch (error) {
             console.error('로그인 실패:', error.message);
         }
@@ -27,8 +27,8 @@ function SetProfile() {
     return (
         <div className="relative left-1/2 max-w-3xl w-full flex flex-col overflow-hidden md:mb-[60px] md:mt-[10px] md:flex-row md:rounded-3 -translate-x-1/2 border-0 sm:border-2 sm:rounded-lg sm:border-gray-250">
             <div className="relative z-20 grow rounded-t-[12px] bg-white px-[16px] py-[50px] md:rounded-0 md:px-[40px] ">
-                <h2 className="mb-[38px] text-center text-xl font-semibold">회원가입</h2>
-                <form onSubmit={handleSignUp}>
+                <h2 className="mb-[38px] text-center text-xl font-semibold">프로필</h2>
+                <form onSubmit={handleSetProfile}>
                     <div className="space-y-[10px]">
                         <div>
                             <label className="text-sm font-semibold block sr-only" htmlFor="email">

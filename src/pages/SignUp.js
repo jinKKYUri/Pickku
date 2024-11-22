@@ -31,8 +31,8 @@ function SignUp() {
             }
             
         } catch (error) {
-            // setError(error.response?.data?.message || '회원가입 실패');
-            setError(error.response);
+            setError(error.response?.data?.message || '회원가입 실패');
+            //setError(error.response);
         }
     };
     return (
