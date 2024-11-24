@@ -1,26 +1,48 @@
 // jk_fe/src/pages/SignUp.js
 
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { setProfile } from '../services/AuthService';
+import React, { useEffect, useState } from 'react';
+import {  useLocation, useNavigate, } from 'react-router-dom';
+import { getUserSeq, setProfile } from '../services/AuthService';
 
 
 //프로필 저장
 function SetProfile() {
-    const [nickname, setNickName] = useState('');
-    const [content, setContent] = useState('');
-    const [profileImg, setProfileImg] = useState('');
+    const [userSeq, setUserSeq] = useState('');
+    const [userNick, setUserNick] = useState('');
+    const [userContent, setUserContent] = useState('');
+    const [userImg, setUserImg] = useState('');
+    const location = useLocation();
+    const {userId} = location.state  || {};
+
     const navigate = useNavigate();
 
-    const isFormValid = nickname.trim() !== "" && content.trim() !== "";
+    const isFormValid = userNick.trim() !== "";
+    // const isFormValid = userNick.trim() !== "" && userContent.trim() !== "";
+
+    useEffect(()=>{
+        const getSeq = async () =>{
+            try{
+                const response = await getUserSeq(userId);
+                setUserSeq(response);
+            }catch(error){
+                console.log(error);
+                navigate('/');
+            }
+        }
+        getSeq();
+    },[userId])
 
 
     const handleSetProfile = async (e) => {
         e.preventDefault();
         try {
-            const response = await setProfile(nickname, content, profileImg); // signupUser 호출
-
+            const response = await setProfile(userSeq,userNick, userContent, userImg); // signupUser 호출
+            // const response = await getUserSeq(userId);
+            // console.log(response.data)
+            // setUserSeq(response)
+            navigate('/');
         } catch (error) {
+            console.log(error)
             console.error('로그인 실패:', error.message);
         }
     };
@@ -30,6 +52,8 @@ function SetProfile() {
                 <h2 className="mb-[38px] text-center text-xl font-semibold">프로필</h2>
                 <form onSubmit={handleSetProfile}>
                     <div className="space-y-[10px]">
+                    {userId && <p style={{ color: 'red' }}>{userId}</p>}
+                    {userSeq && <p style={{ color: 'red' }}>{userSeq}</p>}
                         <div>
                             <label className="text-sm font-semibold block sr-only" htmlFor="email">
                                 닉네임
@@ -38,13 +62,13 @@ function SetProfile() {
                                 </span>
                             </label>
                             <input
-                                id="nickname"
+                                id="userNick"
                                 className="block w-full h-[41px] rounded border bg-white px-4 py-2 ring-inset transition hover:bg-gray-100 focus:ring-2 focus:ring-gray-500 disabled:bg-gray-50 disabled:text-gray-400 disabled:placeholder-gray-300 focus:ring-gray-500"
                                 type="text"
-                                name="nickname"
+                                name="userNick"
                                 placeholder="닉네임"
-                                value={nickname}
-                                onChange={(e) => setNickName(e.target.value)}
+                                value={userNick}
+                                onChange={(e) => setUserNick(e.target.value)}
                             />
                         </div>
                         <div>
@@ -54,13 +78,13 @@ function SetProfile() {
                                 </span>
                             </label>
                             <input
-                                id="content"
+                                id="userContent"
                                 className="block w-full h-[41px] rounded border bg-white px-4 py-2 ring-inset transition hover:bg-gray-100 focus:ring-2 focus:ring-gray-500 disabled:bg-gray-50 disabled:text-gray-400 disabled:placeholder-gray-300 focus:ring-gray-500"
                                 type="text"
-                                name="content"
+                                name="userContent"
                                 placeholder="자기소개"
-                                value={content}
-                                onChange={(e) => setContent(e.target.value)}
+                                value={userContent}
+                                onChange={(e) => setUserContent(e.target.value)}
                             />
                         </div>
                     </div>

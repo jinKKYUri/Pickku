@@ -16,10 +16,11 @@ function Login() {
 
         try {
             const response = await loginUser(userId, password); // authService 호출
-            setToken(response.data.token)
-            localStorage.setItem('token', response.data.token); // 토큰 저장
-            // navigate('/home'); // 로그인 성공 시 대시보드로 이동
+            setToken(response.token)
+            localStorage.setItem('token', response.token); // 토큰 저장
+            navigate('/'); // 로그인 성공 시 홈으로 이동
         } catch (error) {
+            console.log(error)
             setError(error.response?.data?.message || '로그인 실패');
         }
     };

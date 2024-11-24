@@ -1,7 +1,7 @@
 // jk_fe/src/pages/SignUp.js
 
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { signUpUser } from '../services/AuthService';
 
 
@@ -24,15 +24,14 @@ function SignUp() {
         try {
             if(password === checkPassword){
                 const response = await signUpUser(userId, password,email,phone); // signupUser 호출
-                navigate("/setProfile")
-
+                console.log(response)
+                navigate("/setProfile",{state:{userId:userId}});
             }else{
                 alert("패스워드가 일치하지 않습니다.")
             }
             
         } catch (error) {
             setError(error.response?.data?.message || '회원가입 실패');
-            //setError(error.response);
         }
     };
     return (
