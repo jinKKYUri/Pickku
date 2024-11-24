@@ -2,6 +2,7 @@ const db = require("../config/db");
 
 // 사용자 생성 함수(기본 사용자 정보)
 async function registUserModel(userData) {
+    console.log("userModel : registUserModel")
     const { userId, userMail, userPhone, userPw } = userData;
     return new Promise((resolve, reject) => {
         const query = "INSERT INTO userTable (userId,userMail ,userPhone,userPw) VALUES (?, ?, ?, ?)";
