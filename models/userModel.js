@@ -34,7 +34,7 @@ async function getUserIdModel(userId) {
 // 사용자 닉네임 조회함수(중복 방지)
 async function getUserNickModel(userNick) {
     return new Promise((resolve, reject) => {
-        const query = "SELECT * FROM userProfileTable WHERE userNick = ?";
+        const query = "SELECT * FROM userProfileTable WHERE profileNick = ?";
         db.query(query, [userNick], (err, result) => {
             if (err) {
                 reject(err);
@@ -70,8 +70,8 @@ async function getUserProfileModel(userSeq) {
 async function registProfileModel(userData) {
     const { userNick,userContent,userImg,userSeq } = userData;
     return new Promise((resolve, reject) => {
-        const query = "INSERT INTO userProfileTable (userNick,userContent,userImg,userSeq) VALUES (?, ?, ?,?)";
-        db.query(query, [userNick, userContent, userImg,userSeq], (err, result) => {
+        const query = "INSERT INTO userProfileTable (profileNick,profileContent,userSeq) VALUES (?, ?,?)";
+        db.query(query, [userNick, userContent,userSeq], (err, result) => {
             if (err){ reject(err); console.log(err);
             }else resolve({ id: result.insertId, ...userData });
         });

@@ -46,6 +46,7 @@ async function getUserSeqController(req,res){
 //프로필 저장
 async function registProfileController(req,res){
   const {userSeq,userNick,userContent,userImg} = req.body;
+  console.log(userNick)
   try{
     const userData = {
       userSeq,
@@ -56,6 +57,7 @@ async function registProfileController(req,res){
     await registProfileService(userData);
     res.status(200).json({ message: '회원가입 성공' });
   }catch(error){
+    console.log(error)
     console.log("error : registProfileController")
     res.status(400).json({ message: error.message });
   }
