@@ -1,13 +1,12 @@
-const { getUserIdModel, registUserModel, registProfileModel, getUserNickModel } = require("../models/userModel");
+const { getUserIdModel, registUserModel, registProfileModel, getUserNickModel, getUserInfoModel } = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 // 회원가입 서비스
 async function registUserService(userData) {
-    console.log("authService : registUserService")
 
     const { userId, userMail, userPw, userPhone } = userData;
-    console.log(userPw);
+
     // 사용자 아이디 확인
     const existingUserId = await getUserIdModel(userId);
     if (existingUserId) {
@@ -24,44 +23,58 @@ async function registUserService(userData) {
     return newUser;
 }
 
-// 프로필 서비스
+//초기 프로필 등록 서비스
 async function registProfileService(userData) {
-    const { userNick, userContent, userImg } = userData;
+    const { userSeq,userNick, userContent, userImg } = userData;
 
     // 사용자 닉네임 중복 확인
     const existingUserNick = await getUserNickModel(userNick);
     if (existingUserNick) {
-        throw new Error("이미 존재하는 아이디입니다.");
+        throw new Error("이미 존재하는 닉네임입니다.");
     }
 
-    const newProfile = await registProfileModel({userNick,userContent,userImg});
+    const newProfile = await registProfileModel({userSeq,userNick,userContent,userImg});
 
     return newProfile;
 }
 
+
+//userSeq 조회 함수
+async function getUserSeqService(userId){
+    const userSeq = await getUserIdModel(userId);
+    if(!userSeq){
+        throw new Error("사용자를 찾을 수 없습니다.");
+    }
+    return userSeq.userSeq;
+}
+
+
+
 // 로그인 서비스
 async function authenticateUserService(userId, password) {
     // 사용자 조회
-    const user = await getUserIdModel(userId);
-    if (!user) {
+    const userInfo = await getUserIdModel(userId);
+    if (!userInfo) {
         throw new Error("사용자를 찾을 수 없습니다.");
     }
-
+    console.log(password);
+    console.log(userInfo.userPw);
     // 비밀번호 확인
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, userInfo.userPw);
     if (!isMatch) {
         throw new Error("잘못된 비밀번호입니다.");
     }
 
     // JWT 토큰 생성
     const token = jwt.sign(
-        { id: user.id, role: user.role },
+        { id: userInfo.id, role: userInfo.role },
         process.env.JWT_SECRET,
         {
             expiresIn: "1h",
         }
     );
+    console.log(token);
     return token;
 }
 
-module.exports = { registUserService, authenticateUserService, registProfileService };
+module.exports = { registUserService,getUserSeqService ,authenticateUserService, registProfileService };
