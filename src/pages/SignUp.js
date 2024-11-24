@@ -107,7 +107,7 @@ function SignUp() {
                             />
                         </div>
                         <div>
-                            <label className="text-sm font-semibold block sr-only" htmlFor="password">
+                            <label className="text-sm font-semibold block sr-only" htmlFor="phone">
                                 핸드폰
                                 <span className="ml-1 inline-block text-red-500">* <span className="sr-only">필수 항목</span>
                                 </span>
