@@ -3,7 +3,7 @@ import axios from 'axios';
 // 로그인 요청을 처리하는 서비스 함수
 const loginUser = async (userId, userPw) => {
   try {
-    const response = await axios.post('http://wlsrb3469.iptime.org:8002/auth/login', { userId, userPw });
+    const response = await axios.post('http://wlsrb3469.iptime.org:8001/auth/login', { userId, userPw });
     return response.data;
   } catch (error) {
     if (error.response) {
@@ -17,7 +17,7 @@ const loginUser = async (userId, userPw) => {
 // 회원가입 요청을 처리하는 서비스 함수
 const signUpUser = async (userId, userPw, userMail, userPhone) => {
   try {
-    const response = await axios.post('http://wlsrb3469.iptime.org:8002/auth/signup', { userId, userPw, userMail, userPhone });
+    const response = await axios.post('http://wlsrb3469.iptime.org:8001/auth/signup', { userId, userPw, userMail, userPhone });
     return response.data;
   } catch (error) {
     if (error.response) {
@@ -34,7 +34,7 @@ const signUpUser = async (userId, userPw, userMail, userPhone) => {
 //사용자 시퀀스 가져오는 함수 
 const getUserSeq = async (userId) => {
   try {
-    const response = await axios.post('http://wlsrb3469.iptime.org:8002/auth/userseq', { userId });
+    const response = await axios.post('http://wlsrb3469.iptime.org:8001/auth/userseq', { userId });
     return response.data.userSeq;
   } catch (error) {
     if (error.response) {
@@ -50,7 +50,7 @@ const getUserSeq = async (userId) => {
 //초기 프로필 저장 서비스 함수
 const setProfile = async (userSeq,userNick, userContent, userImg) => {
   try {
-    const response = await axios.post('http://wlsrb3469.iptime.org:8002/auth/setprofile', { userSeq,userNick, userContent, userImg });
+    const response = await axios.post('http://wlsrb3469.iptime.org:8001/auth/setprofile', { userSeq,userNick, userContent, userImg });
     return response.data;
   } catch (error) {
     if (error.response) {
