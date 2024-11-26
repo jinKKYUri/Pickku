@@ -3,9 +3,9 @@
 const jwt = require("jsonwebtoken");
 
 // accessToken 발급 함수
-async function issueAccessToken(refreshToken, serviceName, duration, SECRET_KEY) {
+async function issueAccessToken(refreshToken, role, SECRET_KEY) {
   try {
-    const rtInfo = await verifyToken(refreshToken, serviceName, SECRET_KEY);
+    const rtInfo = await verifyToken(refreshToken, role, SECRET_KEY);
     if (rtInfo.div !== 'refreshToken') {
       return false;
     }
@@ -19,13 +19,13 @@ async function issueAccessToken(refreshToken, serviceName, duration, SECRET_KEY)
       SECRET_KEY,
       {
         algorithm: "HS256",
-        expiresIn: duration,
+        expiresIn: "1h",
         issuer: "edc3665",
       }
     );
-    const decoded = await verifyToken(accessToken, serviceName, SECRET_KEY)
+    const decoded = await verifyToken(accessToken, role, SECRET_KEY)
     // console.log(decoded);
-    if (decoded.exp < rtInfo.exp && rtInfo.serviceName == decoded.serviceName) {
+    if (decoded.exp < rtInfo.exp && rtInfo.role == decoded.role) {
       return accessToken;
     } else {
       return false;
@@ -37,19 +37,19 @@ async function issueAccessToken(refreshToken, serviceName, duration, SECRET_KEY)
 }
 
 // refreshToken 발급 함수
-async function issueRefreshToken(userId, serviceName, duration, SECRET_KEY) {
+async function issueRefreshToken(userId, role, SECRET_KEY) {
   try {
     const refreshToken = jwt.sign(
       {
         type: "JWT",
         userId: userId,
-        serviceName: serviceName,
+        role: role,
         div: "refreshToken"
       },
       SECRET_KEY,
       {
         algorithm: "HS256",
-        expiresIn: duration,
+        expiresIn: "14d",
         issuer: "edc3665",
       }
     );
