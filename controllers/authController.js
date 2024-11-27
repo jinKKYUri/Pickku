@@ -1,4 +1,8 @@
-const { registUserService, registProfileService, authenticateUserService, getUserSeqService } = require('../services/authService');
+const { registUserService,
+  registProfileService,
+  authenticateUserService,
+  getUserSeqService,
+  getUserInfoService} = require('../services/authService');
 
 // 회원가입
 async function registUserController(req, res) {
@@ -76,4 +80,23 @@ async function authenticateUserController(req, res) {
   }
 }
 
-module.exports = { registUserController,getUserSeqController, authenticateUserController ,registProfileController};
+
+//20241124 최규리
+// 토큰 검증 후 사용자 정보 넘겨주기
+async function verifyTokenController(req, res) {
+  try {
+    const userId = req.user.id;
+    const user = await getUserInfoService(userId);
+    res.status(200).json({
+      message: '토큰 검증 후 사용자 정보 조회 성공',
+      nick: user.profileNick
+    });
+  } catch (error) {
+    console.log("error : verifyTokenController")
+    console.log(error);
+    res.status(400).json({ message: error.message });
+  }
+}
+
+
+module.exports = { registUserController,getUserSeqController, authenticateUserController ,registProfileController, verifyTokenController};

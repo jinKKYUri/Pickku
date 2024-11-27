@@ -80,4 +80,15 @@ async function authenticateUserService(userId, password) {
     return token;
 }
 
-module.exports = { registUserService, getUserSeqService ,authenticateUserService, registProfileService, getUserInfoService };
+//20241126 최규리
+//user 조회 함수
+async function getUserInfoService(userId) {
+    const user = await getUserModel(userId);
+    if(!user){
+        throw new Error("사용자를 찾을 수 없습니다.");
+    }
+    return user;
+}
+
+
+module.exports = { registUserService,getUserSeqService ,authenticateUserService, registProfileService, getUserInfoService };

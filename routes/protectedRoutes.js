@@ -3,6 +3,7 @@ const { authenticate } = require('../middlewares/authMiddleware');
 const { authorize } = require("../middlewares/roleMiddleware");
 
 const router = express.Router();
+//0 : 관리자 / 1 : 일반사용자 / 2 : 아티스트
 
 // 모든 라우트에 인증 미들웨어 적용 (토큰 확인)
 router.use(authenticate);
@@ -13,12 +14,12 @@ router.get('/profile', (req, res) => {
 });
 
 // 작성자와 관리자만 접근 가능
-router.post("/create-post", authorize(["author", "admin"]), (req, res) => {
+router.post("/create-post", authorize([0, 1]), (req, res) => {
   res.status(200).json({ message: "포스트 작성 페이지" });
 });
 
 // 관리자만 접근 가능
-router.get("/admin", authorize(["admin"]), (req, res) => {
+router.get("/admin", authorize([0]), (req, res) => {
   res.status(200).json({ message: "관리자 페이지" });
 });
 module.exports = router;
