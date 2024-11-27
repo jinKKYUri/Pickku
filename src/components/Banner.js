@@ -1,4 +1,4 @@
-const Banner = () => {
+function Banner() {
     return (
         <section>
             <a href="http://localhost:3000" target="_blank" className="flex duration-300 ease-in-out" rel="noreferrer" style={{ height: '48px' }}>

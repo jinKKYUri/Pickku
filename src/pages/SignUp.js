@@ -41,7 +41,7 @@ function SignUp() {
                 <form onSubmit={handleSignUp}>
                     <div className="space-y-[10px]">
                         <div>
-                            <label className="text-sm font-semibold block sr-only" htmlFor="email">
+                            <label className="text-sm font-semibold block sr-only" htmlFor="userId">
                                 이메일 주소
                                 <span className="ml-1 inline-block text-red-500">
                                     <span className="sr-only">필수 항목</span>
@@ -55,6 +55,7 @@ function SignUp() {
                                 placeholder="아이디"
                                 value={userId}
                                 onChange={(e) => setUserId(e.target.value)}
+                                autoComplete="new-userId"
                             />
                         </div>
                         <div>
@@ -71,22 +72,24 @@ function SignUp() {
                                 placeholder="비밀번호"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
+                                autoComplete="new-password"
                             />
                         </div>
                         <div>
-                            <label className="text-sm font-semibold block sr-only" htmlFor="password">
+                            <label className="text-sm font-semibold block sr-only" htmlFor="confirm-password">
                                 비밀번호 확인
                                 <span className="ml-1 inline-block text-red-500">* <span className="sr-only">필수 항목</span>
                                 </span>
                             </label>
                             <input
-                                id="password"
+                                id="confirm-password"
                                 className="block w-full h-[41px] rounded border bg-white px-4 py-2 ring-inset transition hover:bg-gray-100 focus:ring-2 focus:ring-gray-500 disabled:bg-gray-50 disabled:text-gray-400 disabled:placeholder-gray-300 focus:ring-gray-500"
                                 type="password"
                                 name="password"
                                 placeholder="비밀번호 확인"
                                 value={checkPassword}
                                 onChange={(e) => setCheckPassword(e.target.value)}
+                                autoComplete="new-password"
                             />
                         </div>
                         <div>

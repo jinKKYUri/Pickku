@@ -1,15 +1,40 @@
-// import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { checkToken } from '../services/AuthService';
 import SearchBar from '../components/SearchBar';
 import { ReactComponent as Logo } from '../assets/logo.svg';
 import '../styles/Header.css';
 
 const Header = ({ type }) => {
+  const [user, setUser] = useState(null); // 사용자 정보
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 여부
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const getUserInfo = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const userInfo = await checkToken(token);
+          setUser(userInfo.nick);
+          setIsLoggedIn(true);
+        } catch (error) {
+          console.error("토큰 검증 실패:", error);
+        }
+      }
+    };
+
+    getUserInfo();
+    console.log("누름");
+  }, []);
   const handleLoginClick = () => {
     // 로그인 페이지로 이동
     navigate('/login');
+  };
+
+  const handleLogoutClick = () => {
+    // 로그인 페이지로 이동
+    console.log("로그아웃 실행!");
   };
 
   return (
@@ -20,21 +45,33 @@ const Header = ({ type }) => {
         </a>
         {type === 'main' && (
           <>
-          <div></div>
-          <SearchBar />
-          <div style={{ flexGrow: 1 }}></div>
-          <div className="flex flex-row items-center">
-            <button
-              type="button"
-              className="relative h-9 flex items-center mr-6 no-underline whitespace-nowrap bg-transparent border-none p-0 cursor-pointer"
-              onClick={handleLoginClick}
-            >
-              <p className="css-u2plft" variant="body2" color="gray900">로그인</p>
-            </button>
-          </div>
+            <div style={{ flexGrow: 1 }}></div>
+            <SearchBar />
+            <div className="inline-flex items-center gap-5">
+              {isLoggedIn ? (
+                <>
+                  <p className='inline-block w-auto'>{user}님</p>
+                  <button
+                    type="button"
+                    className="relative h-9 flex items-center rounded-lg no-underline whitespace-nowrap px-4 py-0 cursor-pointer bg-black"
+                    onClick={handleLogoutClick}
+                  >
+                    <p className="text-white" variant="body2" color="gray900">로그아웃</p>
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  className="relative h-9 flex items-center mr-6 no-underline whitespace-nowrap bg-transparent border-none p-0 cursor-pointer"
+                  onClick={handleLoginClick}
+                >
+                  <p className="css-u2plft" variant="body2" color="gray900">로그인</p>
+                </button>
+              )}
+            </div>
           </>
         )}
-        </div>
+      </div>
     </header>
   );
 }

@@ -28,6 +28,21 @@ const signUpUser = async (userId, userPw, userMail, userPhone) => {
   }
 };
 
+//20241126 최규리 작성
+//token을 검증하는 함수
+const checkToken = async (token) => {
+  try {
+    const response = await axios.get('http://wlsrb3469.iptime.org:8001/auth/checkToken', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
 
 //20241124 최진규 작성
 //token 필요할듯
@@ -62,5 +77,5 @@ const setProfile = async (userSeq,userNick, userContent, userImg) => {
 }
 
 // 함수들을 한 번에 export
-export { loginUser, signUpUser,getUserSeq, setProfile };
+export { loginUser, signUpUser,getUserSeq, setProfile, checkToken };
 //export default AuthService;
