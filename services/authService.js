@@ -1,4 +1,8 @@
-const { getUserIdModel, registUserModel, registProfileModel, getUserNickModel, getUserInfoModel } = require("../models/userModel");
+const { getUserIdModel,
+    registUserModel,
+    getUserNickModel,
+    registProfileModel,
+    getUserModel } = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -57,17 +61,16 @@ async function authenticateUserService(userId, password) {
     if (!userInfo) {
         throw new Error("사용자를 찾을 수 없습니다.");
     }
-    console.log(password);
-    console.log(userInfo.userPw);
+    console.log("비번 " + password);
+    console.log("DB에 저장된 decode비번 "+ userInfo.userPw);
     // 비밀번호 확인
     const isMatch = await bcrypt.compare(password, userInfo.userPw);
     if (!isMatch) {
         throw new Error("잘못된 비밀번호입니다.");
     }
-
     // JWT 토큰 생성
     const token = jwt.sign(
-        { id: userInfo.id, role: userInfo.role },
+        { id: userInfo.userId, role: userInfo.userType },
         process.env.JWT_SECRET,
         {
             expiresIn: "1h",
@@ -77,4 +80,4 @@ async function authenticateUserService(userId, password) {
     return token;
 }
 
-module.exports = { registUserService,getUserSeqService ,authenticateUserService, registProfileService };
+module.exports = { registUserService, getUserSeqService ,authenticateUserService, registProfileService, getUserInfoService };
