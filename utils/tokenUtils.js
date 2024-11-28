@@ -3,90 +3,62 @@
 const jwt = require("jsonwebtoken");
 
 // accessToken 발급 함수
-async function issueAccessToken(refreshToken, role, SECRET_KEY) {
-  try {
-    const rtInfo = await verifyToken(refreshToken, role, SECRET_KEY);
-    if (rtInfo.div !== 'refreshToken') {
-      return false;
-    }
-    accessToken = jwt.sign(
-      {
-        type: "JWT",
-        userId: rtInfo.userId,
-        serviceName: serviceName,
-        div: "accesToken"
-      },
-      SECRET_KEY,
-      {
-        algorithm: "HS256",
-        expiresIn: "1h",
-        issuer: "edc3665",
-      }
-    );
-    const decoded = await verifyToken(accessToken, role, SECRET_KEY)
-    // console.log(decoded);
-    if (decoded.exp < rtInfo.exp && rtInfo.role == decoded.role) {
-      return accessToken;
-    } else {
-      return false;
-    }
-  } catch (error) {
-    console.log("makeAccessToken 오류 : " + error);
+function issueAccessToken(refreshToken, role, SECRET_KEY) {
+  const rtInfo = verifyToken(refreshToken, role, SECRET_KEY);
+  if (rtInfo.div !== 'refreshToken') {
     return false;
   }
+  const accessToken = jwt.sign(
+    {
+      type: "JWT",
+      userId: rtInfo.userId,
+      serviceName: serviceName,
+      div: "accesToken"
+    },
+    SECRET_KEY,
+    {
+      algorithm: "HS256",
+      expiresIn: "1h",
+      issuer: "edc3665",
+    }
+  );
+  return accessToken;
 }
 
 // refreshToken 발급 함수
-async function issueRefreshToken(userId, role, SECRET_KEY) {
-  try {
-    const refreshToken = jwt.sign(
-      {
-        type: "JWT",
-        userId: userId,
-        role: role,
-        div: "refreshToken"
-      },
-      SECRET_KEY,
-      {
-        algorithm: "HS256",
-        expiresIn: "14d",
-        issuer: "edc3665",
-      }
-    );
-    const decodedToken = await verifyToken(refreshToken, serviceName, SECRET_KEY);
-    // const expiresAt = await setTokenTime(decodedToken.exp);
-    if (refreshToken !== false) {
-      return refreshToken;
-    } else {
-      return false;
+function issueRefreshToken(userId, role, SECRET_KEY) {
+  const refreshToken = jwt.sign(
+    {
+      type: "JWT",
+      userId: userId,
+      role: role,
+      div: "refreshToken"
+    },
+    SECRET_KEY,
+    {
+      algorithm: "HS256",
+      expiresIn: "14d",
+      issuer: "edc3665",
     }
-  } catch (error) {
-    console.error("makeRefreshToken 오류:", error.name);
-    return false;
-  }
+  );
+  return refreshToken;
 }
 
 // 토큰 검증
-async function verifyToken(token, serviceName, SECRET_KEY) {
-  try {
-    const decoded = jwt.verify(token, SECRET_KEY);
-    if (decoded && decoded.serviceName == serviceName) {
-      return decoded;
-    } else {
-      return false;
-    }
-  } catch (error) {
-    if (error.name === "TokenExpiredError") {
-      return error.name;
-    } else {
-      return false;
-    }
+function verifyToken(token, serviceName, SECRET_KEY) {
 
+  const decoded = jwt.verify(token, SECRET_KEY);
+
+  if (error.name === "TokenExpiredError") {
+    return error.name;
+  } else {
+    return decoded;
   }
+
 }
 
 // db에 적재될 토큰의 의료일자 yyyy-mm-dd hh:mm:ss 형식으로 변환
-async function setTokenTime(unixTimestamp) {
+function setTokenTime(unixTimestamp) {
   try {
     if (unixTimestamp) {
       const date = new Date(unixTimestamp * 1000); // Unix 타임스탬프는 초 단위이므로 1000을 곱해 밀리초로 변환
