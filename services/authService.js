@@ -73,7 +73,6 @@ async function authenticateUserService(userId, password) {
             expiresIn: "1h",
         }
     );
-    console.log(token);
     return token;
 }
 
