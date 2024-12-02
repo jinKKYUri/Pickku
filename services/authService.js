@@ -57,8 +57,7 @@ async function authenticateUserService(userId, password) {
     if (!userInfo) {
         throw new Error("사용자를 찾을 수 없습니다.");
     }
-    console.log(password);
-    console.log(userInfo.userPw);
+
     // 비밀번호 확인
     const isMatch = await bcrypt.compare(password, userInfo.userPw);
     if (!isMatch) {

@@ -45,7 +45,7 @@ function issueRefreshToken(userId, role, SECRET_KEY) {
 }
 
 // 토큰 검증
-function verifyToken(token, serviceName, SECRET_KEY) {
+function verifyToken(token, SECRET_KEY) {
 
   const decoded = jwt.verify(token, SECRET_KEY);
 
