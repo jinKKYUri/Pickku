@@ -78,15 +78,33 @@ async function registProfileModel(userData) {
     });
 }
 
+// 20241126 최규리
+//사용자 정보 가져오는 함수
+//닉네임만 가져올지 아니면 사용자 정보 전체를 가져올지 고민중
+//(모든 정보를 하나씩 가져오려면 함수가 너무 많아질 것 같아서)
+async function getUserModel(userId) {
+    return new Promise((resolve, reject) => {
+        const query =
+            `SELECT *
+            FROM userTable
+            INNER JOIN userProfileTable
+            ON userTable.userSeq = userProfileTable.userSeq
+            WHERE userTable.userId = ?`;
+        db.query(query, [userId], (err, result) => {
+            if (err) reject(err);
+            else resolve(result[0]);
+        });
+    });
+}
 
 //사용자 삭제 함수
 async function deleteUserModel(userId) {
     return new Promise((resolve, reject) => {
-        const query = "DELETE FROM usersTable WHERE userId = ?";
+        const query = "DELETE FROM userTable WHERE userId = ?";
         db.query(query, [userId], (err, result) => {
             if (err) reject(err);
             else resolve(result);
         });
     });
 }
-module.exports = { registUserModel, getUserIdModel,registProfileModel ,deleteUserModel,getUserProfileModel,getUserNickModel };
+module.exports = { registUserModel, getUserIdModel, getUserNickModel, registProfileModel ,deleteUserModel,getUserProfileModel, getUserModel };

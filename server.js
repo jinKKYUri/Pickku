@@ -26,9 +26,9 @@ app.use(express.json());
 app.use('/auth', authRoutes);
 
 // 인증된 사용자만 접근할 수 있는 보호된 라우트
-app.use('/protected', protectedRoutes);
+//app.use('/protected', protectedRoutes);
 //protected 경로로 안묶을려고 이렇게 했음
-// app.use(protectedRoutes);
+ app.use(protectedRoutes);
 
 
 app.get('/', (req, res) => {
