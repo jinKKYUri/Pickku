@@ -7,6 +7,8 @@ async function loginUser(userId, userPw){
     return response.data;
   } catch (error) {
     if (error.response) {
+      console.log("dwqdw");
+      console.log(error.response.data.message)
       throw new Error(error.response.data.message);
     } else {
       throw new Error('서버 오류');
@@ -60,8 +62,6 @@ async function getUserSeq(userId){
   }
 }
 
-
-
 //초기 프로필 저장 서비스 함수
 async function setProfile(userSeq,userNick, userContent, userImg){
   try {
@@ -75,6 +75,7 @@ async function setProfile(userSeq,userNick, userContent, userImg){
     }
   }
 }
+
 
 // 함수들을 한 번에 export
 export { loginUser, signUpUser,getUserSeq, setProfile, checkToken };

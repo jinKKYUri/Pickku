@@ -61,6 +61,7 @@ function SetProfile() {
             // const response = await getUserSeq(userId);
             // console.log(response.data)
             // setUserSeq(response)
+            console.log('qwe')
             navigate('/');
         } catch (error) {
             console.log(error)
