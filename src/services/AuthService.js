@@ -44,7 +44,9 @@ async function checkToken(token){
     console.log(error);
     throw error;
   }
-}
+
+  return response;
+};
 
 //20241124 최진규 작성
 //token 필요할듯

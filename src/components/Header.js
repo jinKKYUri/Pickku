@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { checkToken } from '../services/AuthService';
 import SearchBar from '../components/SearchBar';
 import { ReactComponent as Logo } from '../assets/logo.svg';
 import '../styles/Header.css';
 
-const Header = ({ type }) => {
-  const [user, setUser] = useState(null); // 사용자 정보
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 여부
+function Header({ type , user, isLoggedIn, setIsLoggedIn}) {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,17 +24,14 @@ const Header = ({ type }) => {
     getUserInfo();
     console.log("누름");
   }, []);
-
   const handleLoginClick = () => {
-    // 로그인 페이지로 이동
     navigate('/login');
   };
 
   const handleLogoutClick = () => {
-    localStorage.removeItem('token'); // 토큰 저장
-    navigate('/');
+    // 로그인 페이지로 이동
     console.log("로그아웃 실행!");
-  };  
+  };
 
   return (
     <header className="relative z-40 flex bg-parent h-[66px] top-0 left-0 right-0">
@@ -52,7 +46,11 @@ const Header = ({ type }) => {
             <div className="inline-flex items-center gap-5">
               {isLoggedIn ? (
                 <>
-                  <p className='inline-block w-auto'>{user}님</p>
+                  <button
+                    className="inline-block w-auto"
+                    onClick={handleMyPageClick}>
+                    {user.nick}님
+                  </button>
                   <button
                     type="button"
                     className="relative h-9 flex items-center rounded-lg no-underline whitespace-nowrap px-4 py-0 cursor-pointer bg-black"
