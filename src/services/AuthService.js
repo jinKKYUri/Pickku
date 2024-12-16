@@ -29,20 +29,22 @@ const signUpUser = async (userId, userPw, userMail, userPhone) => {
 };
 
 //20241126 최규리 작성
-//token을 검증하는 함수
+//token을 검증하는 함수(reponse값이 따로 없음 확인용 message만 있고)
 const checkToken = async (token) => {
-  try {
-    const response = await axios.get('http://wlsrb3469.iptime.org:8001/auth/checkToken', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      }
-    });
-    return response.data;
-  } catch (error) {
-    console.log(error);
-    throw error;
+
+  const response = await fetch('http://wlsrb3469.iptime.org:8001/auth/checkToken', {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error('토큰 검증 실패');
   }
-}
+
+  return response;
+};
 
 //20241124 최진규 작성
 //token 필요할듯

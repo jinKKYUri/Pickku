@@ -1,40 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { checkToken } from '../services/AuthService';
 import SearchBar from '../components/SearchBar';
 import { ReactComponent as Logo } from '../assets/logo.svg';
 import '../styles/Header.css';
 
-const Header = ({ type }) => {
-  const [user, setUser] = useState(null); // 사용자 정보
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 여부
+function Header({ type , user, isLoggedIn, setIsLoggedIn}) {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const getUserInfo = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          const userInfo = await checkToken(token);
-          setUser(userInfo.nick);
-          setIsLoggedIn(true);
-        } catch (error) {
-          console.error("토큰 검증 실패:", error);
-        }
-      }
-    };
-
-    getUserInfo();
-    console.log("누름");
-  }, []);
   const handleLoginClick = () => {
-    // 로그인 페이지로 이동
     navigate('/login');
   };
 
   const handleLogoutClick = () => {
-    // 로그인 페이지로 이동
     console.log("로그아웃 실행!");
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+  };
+
+  const handleMyPageClick = () => {
+    navigate(`/mypage/${user.id}`);
   };
 
   return (
@@ -50,7 +34,11 @@ const Header = ({ type }) => {
             <div className="inline-flex items-center gap-5">
               {isLoggedIn ? (
                 <>
-                  <p className='inline-block w-auto'>{user}님</p>
+                  <button
+                    className="inline-block w-auto"
+                    onClick={handleMyPageClick}>
+                    {user.nick}님
+                  </button>
                   <button
                     type="button"
                     className="relative h-9 flex items-center rounded-lg no-underline whitespace-nowrap px-4 py-0 cursor-pointer bg-black"

@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from "../services/AuthService";
+
 function Login() {
-    const [userId, setUserId] = useState(''); // state 초기화
+    const [userId, setUserId] = useState('');
     const [password, setPassword] = useState('');
     const isFormValid = userId.trim() !== "" && password.trim() !== "";
 
@@ -13,7 +14,6 @@ function Login() {
     
     const handleLogin = async (e) => {
         e.preventDefault();
-
         try {
             const response = await loginUser(userId, password); // authService 호출
             setToken(response.token)
