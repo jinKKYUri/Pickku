@@ -27,15 +27,17 @@ const Header = ({ type }) => {
     getUserInfo();
     console.log("누름");
   }, []);
+
   const handleLoginClick = () => {
     // 로그인 페이지로 이동
     navigate('/login');
   };
 
   const handleLogoutClick = () => {
-    // 로그인 페이지로 이동
+    localStorage.removeItem('token'); // 토큰 저장
+    navigate('/');
     console.log("로그아웃 실행!");
-  };
+  };  
 
   return (
     <header className="relative z-40 flex bg-parent h-[66px] top-0 left-0 right-0">

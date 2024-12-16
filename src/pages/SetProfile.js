@@ -1,8 +1,29 @@
 // jk_fe/src/pages/SignUp.js
 
 import React, { useEffect, useState } from 'react';
-import {  useLocation, useNavigate, } from 'react-router-dom';
+import { useLocation, useNavigate, } from 'react-router-dom';
 import { getUserSeq, setProfile } from '../services/AuthService';
+
+
+function InputBox(props) {
+    <div>
+        <label className="text-sm font-semibold block sr-only" htmlFor="email">
+            {props.label}
+            <span className="ml-1 inline-block text-red-500">
+                <span className="sr-only">필수 항목</span>
+            </span>
+        </label>
+        <input
+            id={props.id}
+            className="block w-full h-[41px] rounded border bg-white px-4 py-2 ring-inset transition hover:bg-gray-100 focus:ring-2 focus:ring-gray-500 disabled:bg-gray-50 disabled:text-gray-400 disabled:placeholder-gray-300 focus:ring-gray-500"
+            type={props.type}
+            name={props.name}
+            placeholder={props.placeholder}
+            value={props.value}
+            onChange={props.onChange}
+        />
+    </div>  
+}
 
 
 //프로필 저장
@@ -12,31 +33,31 @@ function SetProfile() {
     const [userContent, setUserContent] = useState('');
     const [userImg, setUserImg] = useState('');
     const location = useLocation();
-    const {userId} = location.state  || {};
+    const { userId } = location.state || {};
 
     const navigate = useNavigate();
 
     const isFormValid = userNick.trim() !== "";
     // const isFormValid = userNick.trim() !== "" && userContent.trim() !== "";
 
-    useEffect(()=>{
-        const getSeq = async () =>{
-            try{
+    useEffect(() => {
+        const getSeq = async () => {
+            try {
                 const response = await getUserSeq(userId);
                 setUserSeq(response);
-            }catch(error){
+            } catch (error) {
                 console.log(error);
                 navigate('/');
             }
         }
         getSeq();
-    },[userId])
+    }, [userId])
 
 
     const handleSetProfile = async (e) => {
         e.preventDefault();
         try {
-            const response = await setProfile(userSeq,userNick, userContent, userImg); // signupUser 호출
+            const response = await setProfile(userSeq, userNick, userContent, userImg); // signupUser 호출
             // const response = await getUserSeq(userId);
             // console.log(response.data)
             // setUserSeq(response)
@@ -52,8 +73,9 @@ function SetProfile() {
                 <h2 className="mb-[38px] text-center text-xl font-semibold">프로필</h2>
                 <form onSubmit={handleSetProfile}>
                     <div className="space-y-[10px]">
-                    {userId && <p style={{ color: 'red' }}>{userId}</p>}
-                    {userSeq && <p style={{ color: 'red' }}>{userSeq}</p>}
+                        {userId && <p style={{ color: 'red' }}>{userId}</p>}
+                        {userSeq && <p style={{ color: 'red' }}>{userSeq}</p>}
+                        <InputBox label='닉네임' id='userNick' type='text' name='userNick' placeholder='닉네임' value={userNick} onChange={(e) => setUserNick(e.target.value)}/>
                         <div>
                             <label className="text-sm font-semibold block sr-only" htmlFor="email">
                                 닉네임
@@ -71,6 +93,7 @@ function SetProfile() {
                                 onChange={(e) => setUserNick(e.target.value)}
                             />
                         </div>
+
                         <div>
                             <label className="text-sm font-semibold block sr-only" htmlFor="password">
                                 자기소개
