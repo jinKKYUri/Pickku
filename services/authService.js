@@ -3,6 +3,10 @@ const { getUserIdModel,
     getUserNickModel,
     registProfileModel,
     getUserModel } = require("../models/userModel");
+const { issueRefreshToken,
+    issueAccessToken,
+    verifyToken,
+    setTokenTime } = require("../utils/tokenUtils");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -57,20 +61,25 @@ async function getUserSeqService(userId){
 // 로그인 서비스
 async function authenticateUserService(userId, password) {
     // 사용자 조회
-    const userInfo = await getUserIdModel(userId);
+    //const userInfo = await getUserIdModel(userId);  이건 userTable에서만 정보 가져오는 거였음
+    const userInfo = await getUserModel(userId);
     if (!userInfo) {
         throw new Error("사용자를 찾을 수 없습니다.");
     }
-    console.log("비번 " + password);
-    console.log("DB에 저장된 decode비번 "+ userInfo.userPw);
     // 비밀번호 확인
     const isMatch = await bcrypt.compare(password, userInfo.userPw);
     if (!isMatch) {
         throw new Error("잘못된 비밀번호입니다.");
     }
     // JWT 토큰 생성
-    const token = jwt.sign(
-        { id: userInfo.userId, role: userInfo.userType },
+    const token = jwt.sign({
+        seq: userInfo.userSeq,
+        id: userInfo.userId,
+        email: userInfo.userMail,
+        phone: userInfo.userPhone,
+        nick: userInfo.profileNick,
+        role: userInfo.userType,
+    },
         process.env.JWT_SECRET,
         {
             expiresIn: "1h",
