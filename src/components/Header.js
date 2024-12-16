@@ -7,30 +7,18 @@ import '../styles/Header.css';
 function Header({ type , user, isLoggedIn, setIsLoggedIn}) {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const getUserInfo = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          const userInfo = await checkToken(token);
-          setUser(userInfo.nick);
-          setIsLoggedIn(true);
-        } catch (error) {
-          console.error("토큰 검증 실패:", error);
-        }
-      }
-    };
-
-    getUserInfo();
-    console.log("누름");
-  }, []);
   const handleLoginClick = () => {
     navigate('/login');
   };
 
   const handleLogoutClick = () => {
-    // 로그인 페이지로 이동
     console.log("로그아웃 실행!");
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+  };
+
+  const handleMyPageClick = () => {
+    navigate(`/mypage/${user.id}`);
   };
 
   return (
