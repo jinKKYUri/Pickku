@@ -1,13 +1,13 @@
-import { BrowserRouter as Router } from 'react-router-dom';
-import MainRouter from './routes/MainRouter';
+import { BrowserRouter as Router } from "react-router-dom";
+import MainRouter from "./routes/MainRouter";
+import Navbar from "./components/Navbar";
 
-
-function App(){
+function App() {
   return (
     <Router>
-      <MainRouter/>
+      <Navbar />
+      <MainRouter />
     </Router>
-
   );
 }
 
