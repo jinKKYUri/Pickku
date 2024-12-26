@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
 import { ReactComponent as Logo } from "../assets/logo.svg";
 import "../styles/Header.css";
@@ -9,6 +9,10 @@ function Header({ type, user, isLoggedIn, setIsLoggedIn }) {
 
   const handleLoginClick = () => {
     navigate("/login");
+  };
+
+  const handleWriteClick = () => {
+    navigate("/writeboard");
   };
 
   const handleLogoutClick = () => {
@@ -44,6 +48,15 @@ function Header({ type, user, isLoggedIn, setIsLoggedIn }) {
                     onClick={handleMyPageClick}
                   >
                     {user.nick}님
+                  </button>
+                  <button
+                    type="button"
+                    className="relative h-9 flex items-center rounded-lg no-underline whitespace-nowrap px-4 py-0 cursor-pointer bg-black"
+                    onClick={handleWriteClick}
+                  >
+                    <p className="text-white" variant="body2" color="gray900">
+                      글 작성
+                    </p>
                   </button>
                   <button
                     type="button"

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../services/AuthService";
 
@@ -12,14 +12,26 @@ function Login() {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/");
+    }
+  });
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const response = await loginUser(userId, password); // authService 호출
-      setToken(response.token);
-      localStorage.setItem("token", response.token); // 토큰 저장
-      navigate("/"); // 로그인 성공 시 홈으로 이동
-      window.location.reload();
+      console.log(response);
+      if (!response.token.userNick) {
+        navigate("/setProfile", { state: { userId: userId } });
+      } else {
+        setToken(response.token);
+        localStorage.setItem("token", response.token); // 토큰 저장
+        navigate("/"); // 로그인 성공 시 홈으로 이동
+        window.location.reload();
+      }
     } catch (error) {
       console.log(error);
       setError(error.response?.data?.message || "로그인 실패");

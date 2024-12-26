@@ -9,6 +9,9 @@ const url = localurl;
 async function loginUser(userId, userPw) {
   try {
     const response = await axios.post(`${url}/auth/login`, { userId, userPw });
+    // if (!response.data.userNick) {
+    //   return response.data.userId;
+    // }
     return response.data;
   } catch (error) {
     if (error.response) {

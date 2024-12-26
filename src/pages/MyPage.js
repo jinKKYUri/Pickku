@@ -14,16 +14,19 @@ function MyPage({ setIsLoggedIn }) {
       if (!token) {
         console.log("토큰이 없습니다. 로그아웃 상태로 설정합니다.");
         navigate("/");
-        return;
       }
       try {
         //response - 토큰 검증 확인용 메시지지
         const response = await checkToken(token);
         // 토큰에서 사용자 정보 디코딩
-        const userInfo = jwtDecode(token);
-        setUser(userInfo);
+        if (response.data !== "") {
+          const userInfo = jwtDecode(token);
+          setUser(userInfo);
+        } else {
+          navigate("/");
+        }
       } catch (error) {
-        console.error("토큰 검증 실패:", error);
+        navigate("/");
       }
     };
 
