@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Slider from "../components/Slider";
+import IndividualIntervalsExample from "../components/IndividualIntervalsExample";
+import Navbar from "../components/Navbar";
 
 function Home() {
   // const [user, setUser] = useState(null);
@@ -28,10 +30,13 @@ function Home() {
   //   getUserInfo();
   // }, []);
   return (
-    <div className="min-w-[1200px]">
+    <div>
       {/* <Header type="main" user={user} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
       <Category /> */}
+      <Navbar />
       <Slider />
+      {/* <IndividualIntervalsExample/> */}
+
     </div>
   );
 }

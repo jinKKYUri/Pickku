@@ -2,10 +2,33 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../services/AuthService";
 
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import { ReactComponent as Logo } from "../assets/logo.svg";
+
+function FormFloatingBasicExample() {
+  return (
+    <>
+      <FloatingLabel
+        controlId="floatingInput"
+        label="Email address"
+        className="mb-3"
+      >
+        <Form.Control type="email" placeholder="name@example.com" />
+      </FloatingLabel>
+      <FloatingLabel controlId="floatingPassword" label="Password">
+        <Form.Control type="password" placeholder="Password" />
+      </FloatingLabel>
+    </>
+  );
+}
+
+
 function Login() {
-  const [userId, setUserId] = useState("");
+  const [userMail, setUserMail] = useState("");
   const [password, setPassword] = useState("");
-  const isFormValid = userId.trim() !== "" && password.trim() !== "";
+  const isFormValid = userMail.trim() !== "" && password.trim() !== "";
 
   const [token, setToken] = useState("");
   const [error, setError] = useState(null);
@@ -22,13 +45,13 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await loginUser(userId, password); // authService 호출
-      console.log(response);
-      if (!response.token.userNick) {
-        navigate("/setProfile", { state: { userId: userId } });
+      const response = await loginUser(userMail, password); // authService 호출
+      if (!response.token) {
+        navigate("/setProfile", { state: { userMail: response.userId, userSeq: response.userSeq } });
       } else {
         setToken(response.token);
         localStorage.setItem("token", response.token); // 토큰 저장
+        console.log("로그인 성공")
         navigate("/"); // 로그인 성공 시 홈으로 이동
         window.location.reload();
       }
@@ -39,15 +62,51 @@ function Login() {
   };
 
   return (
-    // <div className="css-zoj6jx etxqne21">
     <>
       <div className="md:pt-[30px] xl:gap-[50px] mx-auto max-w-screen-xl w-full">
         <div className="relative left-1/2 max-w-3xl w-full flex flex-col overflow-hidden md:mb-[60px] md:mt-[10px] md:flex-row md:rounded-3 -translate-x-1/2 border-0 sm:border-2 sm:rounded-lg sm:border-gray-250">
-          <div className="relative z-20 grow rounded-t-[12px] bg-white px-[16px] py-[50px] md:rounded-0 md:px-[40px] ">
-            <h2 className="mb-[38px] text-center text-xl font-semibold">
-              로그인
-            </h2>
-            <form onSubmit={handleLogin}>
+          <div className="relative z-20 grow  rounded-t-[12px] bg-white px-[16px] py-[50px] md:rounded-0 md:px-[40px]">
+            <div className="flex justify-center">
+              <h2 className="mb-[38px] text-xl font-semibold">
+                <Logo />
+              </h2>
+            </div>
+
+            <Form onSubmit={handleLogin}>
+
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <FloatingLabel
+                  controlId="floatingInput"
+                  label="이메일"
+                  className="mb-3"
+                >
+                  <Form.Control type="email" placeholder="name@example.com" value={userMail}
+                    onChange={(e) => setUserMail(e.target.value)}
+                    style={{ outline: "none", boxShadow: "none" }} />
+                </FloatingLabel>
+              </Form.Group>
+
+              <Form.Group className="mb-3" controlId="formBasicPassword">
+                <FloatingLabel controlId="floatingPassword" label="비밀번호">
+                  <Form.Control type="password" name="password"
+                    placeholder="비밀번호"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    style={{ outline: "none", boxShadow: "none" }} />
+                </FloatingLabel>
+              </Form.Group>
+              {isFormValid ?
+                <Button className="w-[100%]" variant="dark" type="submit">
+                  로그인
+                </Button>
+                :
+                <Button className="w-[100%]" variant="secondary" disabled>
+                  로그인
+                </Button>
+              }
+              {error && <p style={{ color: "red" }}>{error}</p>}
+            </Form>
+            {/* <form onSubmit={handleLogin}>
               <div className="space-y-[10px]">
                 <div>
                   <label
@@ -97,13 +156,12 @@ function Login() {
               <button
                 type="submit"
                 disabled={!isFormValid} // 유효하지 않은 경우 비활성화
-                className={`items-center justify-center flex flex-none gap-2 rounded px-4 py-2 font-semibold transition duration-300 text-white ${
-                  isFormValid ? "bg-pink-500" : "bg-gray-300 cursor-not-allowed"
-                } mt-[38px] h-[45px] w-full`}
+                className={`items-center justify-center flex flex-none gap-2 rounded px-4 py-2 font-semibold transition duration-300 text-white ${isFormValid ? "bg-pink-500" : "bg-gray-300 cursor-not-allowed"
+                  } mt-[38px] h-[45px] w-full`}
               >
                 로그인
               </button>
-            </form>
+            </form> */}
             <div className="mt-[38px]">
               <h3 className="relative mb-[20px] text-center text-sm text-gray-500 before:absolute before:top-1/2 before:block before:w-full before:border-t before:content-empty before:-z-1">
                 <span className="relative bg-white px-[12px] z-10">

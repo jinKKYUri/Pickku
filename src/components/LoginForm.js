@@ -65,8 +65,8 @@ const LoginForm = () => {
                         type="submit"
                         disabled={!isFormValid} // 유효하지 않은 경우 비활성화
                         className={`items-center justify-center flex flex-none gap-2 rounded px-4 py-2 font-semibold transition duration-300 text-white ${isFormValid
-                                ? "bg-pink-500"
-                                : "bg-gray-300 cursor-not-allowed"
+                            ? "bg-pink-500"
+                            : "bg-gray-300 cursor-not-allowed"
                             } mt-[38px] h-[45px] w-full`}
                     >
                         로그인

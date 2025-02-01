@@ -7,7 +7,7 @@ import "../styles/Slider.css";
 const slides = [
   {
     imageUrl:
-      "https://alook.so/file_storages/blobs/proxy/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBMU9RREE9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--7eae731b2a73979d47aeebf3638e3c398a8113c0/21211_1686424435.jpg",
+      "https://artmugfile2.cafe24.com/image/goods_img1/1/17056C.jpg?ver=1717445691",
   },
   {
     imageUrl:

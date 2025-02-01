@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const localurl = "http://localhost:8000";
+// const localurl = "http://localhost:8000";
 const remoteurl = "http://wlsrb3469.iptime.org:8000";
 
-const url = localurl;
+const url = remoteurl;
 
 // 로그인 요청을 처리하는 서비스 함수
 async function loginUser(userId, userPw) {
@@ -15,7 +15,6 @@ async function loginUser(userId, userPw) {
     return response.data;
   } catch (error) {
     if (error.response) {
-      console.log("dwqdw");
       console.log(error.response.data.message);
       throw new Error(error.response.data.message);
     } else {
