@@ -24,13 +24,14 @@ async function loginUser(userId, userPw) {
 }
 
 // 회원가입 요청을 처리하는 서비스 함수
-async function signUpUser(userId, userPw, userMail, userPhone) {
+// 약관 여부도 보내야됨
+async function signUpUser(userMail, userNick, userPw, userPhone) {
   try {
     console.log(url);
     const response = await axios.post(`${url}/auth/signup`, {
-      userId,
-      userPw,
       userMail,
+      userNick,
+      userPw,
       userPhone,
     });
     return response.data;

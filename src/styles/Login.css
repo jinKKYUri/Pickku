@@ -1,0 +1,152 @@
+.content {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1280px;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.logo-title {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 50px;
+}
+
+
+.login-area {
+    margin: 0 auto;
+    padding: 60px 0 160px;
+    width: 400px;
+}
+
+.input-box {
+    position: relative;
+    padding: 10px 0 20px;
+}
+
+
+.input-title {
+    font-size: 13px;
+    letter-spacing: -.07px;
+    line-height: 18px;
+    font-weight: bold;
+}
+
+.input-title label {
+    position: relative;
+    padding: 0;
+}
+
+.input-item input {
+
+    border: 0;
+    border-bottom: 1px solid #ebebeb;
+    font-size: 15px;
+    letter-spacing: -.15px;
+    line-height: 22px;
+    padding: 8px 0 !important;
+    width: 100%;
+    -webkit-appearance: none;
+    background-color: transparent;
+    border-radius: 0;
+    outline: 0;
+    padding: 0;
+    resize: none;
+}
+
+
+/* 로그인 버튼, social 로그인 버튼*/
+.login-button,
+.social-login button {
+    padding: 0;
+    align-items: center;
+    background-color: #fff;
+    color: rgba(34, 34, 34, .8);
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 16px;
+    font-weight: 700;
+    height: 52px;
+    letter-spacing: -.16px;
+    width: 100%;
+}
+
+/* 로그인 버튼 */
+.login-button {
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.login-button.valid {
+    background-color: black;
+    color: white;
+    cursor: pointer;
+
+}
+
+.login-button.invalid {
+    background-color: rgba(34, 34, 34, .2);
+    color: #fff;
+    cursor: default;
+    font-weight: bold;
+    padding: 0;
+}
+
+/* 이메일/비번 찾기, 회원가입 */
+.auth-links {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 20px;
+    padding: 0;
+}
+
+.auth-links li {
+    align-items: flex-start;
+    display: inline-flex;
+    flex: 1;
+}
+
+.auth-links li:not(:last-child)::after {
+    background-color: #d3d3d3;
+    content: "";
+    display: inline-block;
+    height: 13px;
+    margin-top: 3px;
+    width: 1px;
+}
+
+.link {
+    display: inline-flex;
+    font-size: 13px;
+    letter-spacing: -.07px;
+    margin: auto;
+    padding: 0 10px;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, .1);
+    color: inherit;
+    text-decoration: none;
+}
+
+/* 소셜 로그인 */
+.social-login {
+    margin-top: 40px;
+}
+
+.social-login button {
+    border-color: #ebebeb;
+    color: #222;
+    position: relative;
+    margin-bottom: 8px;
+}
+
+.logo-social {
+    height: 24px;
+    left: 15px;
+    position: absolute;
+    top: 13px;
+    width: 24px;
+}

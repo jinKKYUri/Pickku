@@ -11,40 +11,37 @@ const Category = () => {
     const [hoveredIndex, setHoveredIndex] = useState(null);
 
     return (
-        <section style={{ top: 0 }} className="z-30 border border-transparent bg-white border-b border-b-gray-300">
-            <div className="css-533jkm e1eaabms0">
-                <nav className="css-70qvj9 e1p90o9s0">
-                    <ul className="css-1o9jlhu e1p90o9s1">
-                    {categories.map((category) => (
-                        <li
-                            key={category.id}
-                            onMouseEnter={() => setHoveredIndex(category.id)}
-                            onMouseLeave={() => setHoveredIndex(null)}
-                        >
-                            <div className="css-nw97ew e1neq6gu0">
-                                <a className="css-1hix25n e1p90o9s2" href={category.link}>
-                                <div className="css-1rps1q e1neq6gu1">
-                                    <p className="css-b2qmlw" variant="body1" color="gray900">
-                                    {category.name}
+        <nav className="category-nav">
+            <ul className="category-list">
+                {categories.map((category) => (
+                    <li
+                        key={category.id}
+                        onMouseEnter={() => setHoveredIndex(category.id)}
+                        onMouseLeave={() => setHoveredIndex(null)}
+                        className="category-item"
+                    >
+                        <div className="category-item-content">
+                            <a className="category-link" href={category.link}>
+                                <div className="category-text">
+                                    <p className="category-name" variant="body1" color="gray900">
+                                        {category.name}
                                     </p>
-                                    <div className="css-1yc2531 e1p90o9s5">
-                                    <div className={
-                                            hoveredIndex === category.id ? 'css-eisj2f e1p90o9s5' : 'css-uwwqev e1p90o9s5'
+                                    <div className="category-hover-effect">
+                                        <div className={
+                                            hoveredIndex === category.id ? 'hovered' : 'not-hovered'
                                         }>
-                                                    
+
                                         </div>
                                     </div>
                                 </div>
-                                </a>
-                            </div>
-                        </li>
-                    ))}
-                    </ul>
-                </nav>
-            </div>
-        </section>
-                    
-                
+                            </a>
+                        </div>
+                    </li>
+                ))}
+            </ul>
+        </nav>
+
+
     );
 }
 export default Category;
