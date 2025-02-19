@@ -1,23 +1,24 @@
 const { registUserService,
   registProfileService,
-  authenticateUserService,
   getUserSeqService,
-  getUserInfoService} = require('../services/authService');
+  getUserInfoService, 
+  loginService} = require('../services/authService');
 
 // 회원가입
 async function registUserController(req, res) {
-  const { userId, userMail, userPhone, userPw  } = req.body;
+  const { mail, provider, providerId, password } = req.body;
   try {
     const userData = {
-      userId, 
-      userMail, 
-      userPw, 
-      userPhone
+      mail,
+      provider,
+      providerId,
+      password
     };
     await registUserService(userData);
     res.status(200).json({ message: '회원가입 성공' });
   } catch (error) {
     console.log("error : registUserController")
+    console.log(error)
     res.status(400).json({ message: error.message });
   }
 }
@@ -36,11 +37,11 @@ async function registUserController(req, res) {
 
 //20241124 최진규
 // userSeq 가져오기
-async function getUserSeqController(req,res){
-  const {userId} = req.body;
+async function getUserIdController(req, res) {
+  const { userId } = req.body;
   try {
     const userSeq = await getUserSeqService(userId);
-    res.status(200).json({ message: '로그인 성공', userSeq:userSeq });
+    res.status(200).json({ message: '로그인 성공', userSeq: userSeq });
   } catch (error) {
     console.log("error : getUserSeqController")
     res.status(400).json({ message: error.message });
@@ -48,19 +49,13 @@ async function getUserSeqController(req,res){
 }
 
 //프로필 저장
-async function registProfileController(req,res){
-  const {userSeq,userNick,userContent,userImg} = req.body;
+async function registProfileController(req, res) {
+  const { userSeq, userNick, userContent, userImg } = req.body;
   console.log(userNick)
-  try{
-    const userData = {
-      userSeq,
-      userNick,
-      userContent,
-      userImg
-    }
-    await registProfileService(userData);
+  try {
+    await registProfileService(userSeq, userNick, userContent, userImg);
     res.status(200).json({ message: '회원가입 성공' });
-  }catch(error){
+  } catch (error) {
     console.log(error)
     console.log("error : registProfileController")
     res.status(400).json({ message: error.message });
@@ -68,11 +63,17 @@ async function registProfileController(req,res){
 }
 
 // 로그인
-async function authenticateUserController(req, res) {
-  const { userId, userPw } = req.body;
-  try {
-    const token = await authenticateUserService(userId, userPw);
-    res.status(200).json({ message: '로그인 성공', token });
+async function localLoginController(req, res) {
+  const { mail, password } = req.body;
+  try { 
+    const result = await loginService(mail,password);
+    if (!result.token) {
+      const userId = result.userId
+      res.status(200).json({ message: '프로필 미작성', userId });
+    } else {
+      const token = result.token;
+      res.status(200).json({ message: '로그인 성공', token });
+    }
   } catch (error) {
     console.log("error : authenticateUserController")
     console.log(error);
@@ -99,4 +100,4 @@ async function authenticateUserController(req, res) {
 // }
 
 
-module.exports = { registUserController,getUserSeqController, authenticateUserController ,registProfileController};
+module.exports = { registUserController, getUserIdController, localLoginController, registProfileController };

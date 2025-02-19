@@ -1,6 +1,7 @@
 const mysql = require('mysql2');
 const dotenv = require('dotenv');
 dotenv.config();
+// dotenv.config({ path: '../.env' })
 
 // MySQL 데이터베이스 연결 설정
 const db = mysql.createConnection({  //mysql.createPool()
@@ -14,6 +15,7 @@ const db = mysql.createConnection({  //mysql.createPool()
 // 처음 연결 실행
 db.connect((err) => {
     if (err) {
+      console.log(err)
       console.error('MySQL 연결 실패:', err.message);
       return;
     }
