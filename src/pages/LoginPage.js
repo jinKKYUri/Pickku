@@ -1,34 +1,19 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { loginUser } from "../services/AuthService";
+import { login } from "../services/AuthService";
 
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { ReactComponent as Logo } from "../assets/logo.svg";
 
-function FormFloatingBasicExample() {
-  return (
-    <>
-      <FloatingLabel
-        controlId="floatingInput"
-        label="Email address"
-        className="mb-3"
-      >
-        <Form.Control type="email" placeholder="name@example.com" />
-      </FloatingLabel>
-      <FloatingLabel controlId="floatingPassword" label="Password">
-        <Form.Control type="password" placeholder="Password" />
-      </FloatingLabel>
-    </>
-  );
-}
 
 
-function Login() {
-  const [userMail, setUserMail] = useState("");
+
+function LoginPage() {
+  const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
-  const isFormValid = userMail.trim() !== "" && password.trim() !== "";
+  const isFormValid = mail.trim() !== "" && password.trim() !== "";
 
   const [token, setToken] = useState("");
   const [error, setError] = useState(null);
@@ -42,10 +27,14 @@ function Login() {
     }
   });
 
+  const handleClickLogo = async (e) => {
+    navigate("/");
+  }
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await loginUser(userMail, password); // authService 호출
+      const response = await login(mail, password); // authService 호출
       if (!response.token) {
         navigate("/setProfile", { state: { userMail: response.userId, userSeq: response.userSeq } });
       } else {
@@ -63,25 +52,23 @@ function Login() {
 
   return (
     <>
-      <div className="md:pt-[30px] xl:gap-[50px] mx-auto max-w-screen-xl w-full">
+      <div style={{marginTop:'5%'}} className="md:pt-[30px] xl:gap-[50px] mx-auto max-w-screen-xl w-full">
+        <div className="flex justify-center">
+          <button className="mb-[38px] text-xl font-semibold" onClick={handleClickLogo}>
+            <Logo />
+          </button>
+        </div>
         <div className="relative left-1/2 max-w-3xl w-full flex flex-col overflow-hidden md:mb-[60px] md:mt-[10px] md:flex-row md:rounded-3 -translate-x-1/2 border-0 sm:border-2 sm:rounded-lg sm:border-gray-250">
-          <div className="relative z-20 grow  rounded-t-[12px] bg-white px-[16px] py-[50px] md:rounded-0 md:px-[40px]">
-            <div className="flex justify-center">
-              <h2 className="mb-[38px] text-xl font-semibold">
-                <Logo />
-              </h2>
-            </div>
-
+          <div style={{ border: "0.5px solid", borderRadius: "10px" ,margin:"5%"}} className="relative z-20 grow  rounded-t-[12px] bg-white px-[16px] py-[50px] md:rounded-0 md:px-[40px]">
             <Form onSubmit={handleLogin}>
-
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <FloatingLabel
                   controlId="floatingInput"
                   label="이메일"
                   className="mb-3"
                 >
-                  <Form.Control type="email" placeholder="name@example.com" value={userMail}
-                    onChange={(e) => setUserMail(e.target.value)}
+                  <Form.Control type="email" placeholder="name@example.com" value={mail}
+                    onChange={(e) => setMail(e.target.value)}
                     style={{ outline: "none", boxShadow: "none" }} />
                 </FloatingLabel>
               </Form.Group>
@@ -95,6 +82,7 @@ function Login() {
                     style={{ outline: "none", boxShadow: "none" }} />
                 </FloatingLabel>
               </Form.Group>
+
               {isFormValid ?
                 <Button className="w-[100%]" variant="dark" type="submit">
                   로그인
@@ -106,62 +94,6 @@ function Login() {
               }
               {error && <p style={{ color: "red" }}>{error}</p>}
             </Form>
-            {/* <form onSubmit={handleLogin}>
-              <div className="space-y-[10px]">
-                <div>
-                  <label
-                    className="text-sm font-semibold block sr-only"
-                    htmlFor="userId"
-                  >
-                    이메일 주소
-                    <span className="ml-1 inline-block text-red-500">
-                      <span className="sr-only">필수 항목</span>
-                    </span>
-                  </label>
-                  <input
-                    id="userId"
-                    className="block w-full h-[41px] rounded border bg-white px-4 py-2 ring-inset transition hover:bg-gray-100 focus:ring-2 focus:ring-gray-500 disabled:bg-gray-50 disabled:text-gray-400 disabled:placeholder-gray-300 focus:ring-gray-500"
-                    type="text"
-                    name="userId"
-                    placeholder="아이디"
-                    value={userId}
-                    onChange={(e) => setUserId(e.target.value)}
-                    autoComplete="current-userId"
-                  />
-                </div>
-                <div>
-                  <label
-                    className="text-sm font-semibold block sr-only"
-                    htmlFor="password"
-                  >
-                    비밀번호
-                    <span className="ml-1 inline-block text-red-500">
-                      * <span className="sr-only">필수 항목</span>
-                    </span>
-                  </label>
-                  <input
-                    id="password"
-                    className="block w-full h-[41px] rounded border bg-white px-4 py-2 ring-inset transition hover:bg-gray-100 focus:ring-2 focus:ring-gray-500 disabled:bg-gray-50 disabled:text-gray-400 disabled:placeholder-gray-300 focus:ring-gray-500"
-                    type="password"
-                    name="password"
-                    placeholder="비밀번호"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    autoComplete="current-password"
-                  />
-                </div>
-              </div>
-              {error && <p style={{ color: "red" }}>{error}</p>}
-
-              <button
-                type="submit"
-                disabled={!isFormValid} // 유효하지 않은 경우 비활성화
-                className={`items-center justify-center flex flex-none gap-2 rounded px-4 py-2 font-semibold transition duration-300 text-white ${isFormValid ? "bg-pink-500" : "bg-gray-300 cursor-not-allowed"
-                  } mt-[38px] h-[45px] w-full`}
-              >
-                로그인
-              </button>
-            </form> */}
             <div className="mt-[38px]">
               <h3 className="relative mb-[20px] text-center text-sm text-gray-500 before:absolute before:top-1/2 before:block before:w-full before:border-t before:content-empty before:-z-1">
                 <span className="relative bg-white px-[12px] z-10">
@@ -189,7 +121,10 @@ function Login() {
             </div>
             <div className="mx-auto mt-[20px] block text-center text-sm text-gray-700 space-x-[10px]">
               <span>계정이 없으신가요?</span>
-              <Link to="/SignUp">
+              {/* <Link to="/SignUp">
+                <span className="font-semibold underline">회원가입 하기</span>
+              </Link> */}
+              <Link to="/signuptype">
                 <span className="font-semibold underline">회원가입 하기</span>
               </Link>
             </div>
@@ -200,4 +135,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginPage;

@@ -1,0 +1,265 @@
+// jk_fe/src/pages/SignUp.js
+
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { localSignUp } from "../services/AuthService";
+
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import { ReactComponent as Logo } from "../assets/logo.svg";
+
+//회원가입
+function SignUpPage() {
+  const [mail, setMail] = useState("");
+  const [password, setPassword] = useState("");
+  const [checkPassword, setCheckPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
+
+  const isFormValid = mail.trim() !== "" && password.trim() !== "";
+
+  const handleClickLogo = async (e) => {
+    navigate("/");
+  }
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    try {
+      if (password === checkPassword) {
+        const response = await localSignUp(mail,password,phone); // signupUser 호출
+        console.log(response);
+        navigate("/setProfile", { state: { mail: mail } });
+      } else {
+        alert("패스워드가 일치하지 않습니다.");
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || "회원가입 실패");
+    }
+  };
+  return (
+    <>
+      <div style={{marginTop:'5%'}} className="md:pt-[30px] xl:gap-[50px] mx-auto max-w-screen-xl w-full">
+        <div className="flex justify-center">
+          <button className="mb-[38px] text-xl font-semibold" onClick={handleClickLogo}>
+            <Logo />
+          </button>
+        </div>
+        <div className="relative left-1/2 max-w-3xl w-full flex flex-col overflow-hidden md:mb-[60px] md:mt-[10px] md:flex-row md:rounded-3 -translate-x-1/2 border-0 sm:border-2 sm:rounded-lg sm:border-gray-250">
+          <div style={{ border: "0.5px solid", borderRadius: "10px" ,margin:"5%"}} className="relative z-20 grow  rounded-t-[12px] bg-white px-[16px] py-[50px] md:rounded-0 md:px-[40px]">
+            <Form onSubmit={handleSignUp}>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <FloatingLabel
+                  controlId="floatingInput"
+                  label="이메일"
+                  className="mb-3"
+                >
+                  <Form.Control type="email" placeholder="name@example.com" value={mail}
+                    onChange={(e) => setMail(e.target.value)}
+                    style={{ outline: "none", boxShadow: "none" }} />
+                </FloatingLabel>
+              </Form.Group>
+            
+              <Form.Group className="mb-3" controlId="formBasicPassword">
+                <FloatingLabel controlId="floatingPassword" label="비밀번호">
+                  <Form.Control type="password" name="password"
+                    placeholder="비밀번호"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    style={{ outline: "none", boxShadow: "none" }} />
+                </FloatingLabel>
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formBasicPassword">
+                <FloatingLabel controlId="floatingPassword" label="비밀번호 확인">
+                  <Form.Control type="password" name="checkPassword"
+                    placeholder="비밀번호 확인"
+                    value={checkPassword}
+                    onChange={(e) => setCheckPassword(e.target.value)}
+                    style={{ outline: "none", boxShadow: "none" }} />
+                </FloatingLabel>
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formBasicPassword">
+                <FloatingLabel controlId="floatingPassword" label="연락처">
+                  <Form.Control type="phone" name="password"
+                    placeholder="연락처"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    style={{ outline: "none", boxShadow: "none" }} />
+                </FloatingLabel>
+              </Form.Group>
+
+              {isFormValid ?
+                <Button className="w-[100%]" variant="dark" type="submit">
+                  회원가입
+                </Button>
+                :
+                <Button className="w-[100%]" variant="secondary" disabled>
+                  회원가입
+                </Button>
+              }
+              {error && <p style={{ color: "red" }}>{error}</p>}
+            </Form>
+            <div className="mt-[38px]">
+              <h3 className="relative mb-[20px] text-center text-sm text-gray-500 before:absolute before:top-1/2 before:block before:w-full before:border-t before:content-empty before:-z-1">
+                <span className="relative bg-white px-[12px] z-10">
+                  간편 회원가입
+                </span>
+              </h3>
+              <div className="flex justify-center gap-[25px]">
+                <button className="h-[50px] w-[50px] flex both-center gap-2 border rounded-full text-sm font-semibold transition hover:border-gray-300">
+                  <img
+                    src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzA4MTBfMjkg%2FMDAxNTAyMzQ1NjgxMTcx.HN5OduMJB4wLP2Ryov53lcBW-UhIkXLXZdd_SRReFAgg.mL_h394FDyN7gsATSeFOYSoDYWMPnuLPSfcLkquAIdMg.PNG.baroniter%2Fnaver_pay_img_04.png&type=a340"
+                    alt="Naver"
+                    className="h-[50px] w-[50px] rounded-full"
+                  />
+                  <span className="sr-only">네이버 계정으로 로그인하기</span>
+                </button>
+                <button className="h-[50px] w-[50px] flex both-center gap-2 border rounded-full text-sm font-semibold transition hover:border-gray-300">
+                  <img
+                    src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2F20150902_266%2Fairishj01_1441151685011H1zoF_JPEG%2F11813434_10153577767937838_3231184993169792009_n.jpg&type=a340"
+                    alt="Naver"
+                    className="h-[50px] w-[50px] rounded-full"
+                  />
+                  <span className="sr-only">구글 계정으로 로그인하기</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </>
+    // <>
+    //   <div className="md:pt-[30px] xl:gap-[50px] mx-auto max-w-screen-xl w-full">
+    //     <div className="relative left-1/2 max-w-3xl w-full flex flex-col overflow-hidden md:mb-[60px] md:mt-[10px] md:flex-row md:rounded-3 -translate-x-1/2 border-0 sm:border-2 sm:rounded-lg sm:border-gray-250">
+    //       <div className="relative z-20 grow rounded-t-[12px] bg-white px-[16px] py-[50px] md:rounded-0 md:px-[40px] ">
+    //         <h2 className="mb-[38px] text-center text-xl font-semibold">
+    //           회원가입
+    //         </h2>
+    //         <form onSubmit={handleSignUp}>
+    //           <div className="space-y-[10px]">
+    //             <div>
+    //               <label
+    //                 className="text-sm font-semibold block sr-only"
+    //                 htmlFor="userId"
+    //               >
+    //                 이메일 주소
+    //                 <span className="ml-1 inline-block text-red-500">
+    //                   <span className="sr-only">필수 항목</span>
+    //                 </span>
+    //               </label>
+    //               <input
+    //                 id="userId"
+    //                 className="block w-full h-[41px] rounded border bg-white px-4 py-2 ring-inset transition hover:bg-gray-100 focus:ring-2 focus:ring-gray-500 disabled:bg-gray-50 disabled:text-gray-400 disabled:placeholder-gray-300 focus:ring-gray-500"
+    //                 type="text"
+    //                 name="userId"
+    //                 placeholder="아이디"
+    //                 value={userId}
+    //                 onChange={(e) => setUserId(e.target.value)}
+    //                 autoComplete="new-userId"
+    //               />
+    //             </div>
+    //             <div>
+    //               <label
+    //                 className="text-sm font-semibold block sr-only"
+    //                 htmlFor="password"
+    //               >
+    //                 비밀번호
+    //                 <span className="ml-1 inline-block text-red-500">
+    //                   * <span className="sr-only">필수 항목</span>
+    //                 </span>
+    //               </label>
+    //               <input
+    //                 id="password"
+    //                 className="block w-full h-[41px] rounded border bg-white px-4 py-2 ring-inset transition hover:bg-gray-100 focus:ring-2 focus:ring-gray-500 disabled:bg-gray-50 disabled:text-gray-400 disabled:placeholder-gray-300 focus:ring-gray-500"
+    //                 type="password"
+    //                 name="password"
+    //                 placeholder="비밀번호"
+    //                 value={password}
+    //                 onChange={(e) => setPassword(e.target.value)}
+    //                 autoComplete="new-password"
+    //               />
+    //             </div>
+    //             <div>
+    //               <label
+    //                 className="text-sm font-semibold block sr-only"
+    //                 htmlFor="confirm-password"
+    //               >
+    //                 비밀번호 확인
+    //                 <span className="ml-1 inline-block text-red-500">
+    //                   * <span className="sr-only">필수 항목</span>
+    //                 </span>
+    //               </label>
+    //               <input
+    //                 id="confirm-password"
+    //                 className="block w-full h-[41px] rounded border bg-white px-4 py-2 ring-inset transition hover:bg-gray-100 focus:ring-2 focus:ring-gray-500 disabled:bg-gray-50 disabled:text-gray-400 disabled:placeholder-gray-300 focus:ring-gray-500"
+    //                 type="password"
+    //                 name="password"
+    //                 placeholder="비밀번호 확인"
+    //                 value={checkPassword}
+    //                 onChange={(e) => setCheckPassword(e.target.value)}
+    //                 autoComplete="new-password"
+    //               />
+    //             </div>
+    //             <div>
+    //               <label
+    //                 className="text-sm font-semibold block sr-only"
+    //                 htmlFor="email"
+    //               >
+    //                 이메일
+    //                 <span className="ml-1 inline-block text-red-500">
+    //                   * <span className="sr-only">필수 항목</span>
+    //                 </span>
+    //               </label>
+    //               <input
+    //                 id="email"
+    //                 className="block w-full h-[41px] rounded border bg-white px-4 py-2 ring-inset transition hover:bg-gray-100 focus:ring-2 focus:ring-gray-500 disabled:bg-gray-50 disabled:text-gray-400 disabled:placeholder-gray-300 focus:ring-gray-500"
+    //                 type="email"
+    //                 name="email"
+    //                 placeholder="이메일"
+    //                 value={email}
+    //                 onChange={(e) => setEmail(e.target.value)}
+    //               />
+    //             </div>
+    //             <div>
+    //               <label
+    //                 className="text-sm font-semibold block sr-only"
+    //                 htmlFor="phone"
+    //               >
+    //                 핸드폰
+    //                 <span className="ml-1 inline-block text-red-500">
+    //                   * <span className="sr-only">필수 항목</span>
+    //                 </span>
+    //               </label>
+    //               <input
+    //                 id="phone"
+    //                 className="block w-full h-[41px] rounded border bg-white px-4 py-2 ring-inset transition hover:bg-gray-100 focus:ring-2 focus:ring-gray-500 disabled:bg-gray-50 disabled:text-gray-400 disabled:placeholder-gray-300 focus:ring-gray-500"
+    //                 type="text"
+    //                 name="phone"
+    //                 placeholder="핸드폰"
+    //                 value={phone}
+    //                 onChange={(e) => setPhone(e.target.value)}
+    //               />
+    //             </div>
+    //           </div>
+    //           {error && <p style={{ color: "red" }}>{error}</p>}
+    //           <button
+    //             type="submit"
+    //             disabled={!isFormValid} // 유효하지 않은 경우 비활성화
+    //             className={`items-center justify-center flex flex-none gap-2 rounded px-4 py-2 font-semibold transition duration-300 text-white ${
+    //               isFormValid ? "bg-pink-500" : "bg-gray-300 cursor-not-allowed"
+    //             } mt-[38px] h-[45px] w-full`}
+    //           >
+    //             가입하기
+    //           </button>
+    //         </form>
+    //       </div>
+    //     </div>
+    //   </div>
+    // </>
+  );
+}
+
+export default SignUpPage;

@@ -6,12 +6,13 @@ const remoteurl = "http://wlsrb3469.iptime.org:8000";
 const url = remoteurl;
 
 // 로그인 요청을 처리하는 서비스 함수
-async function loginUser(userId, userPw) {
+async function login(mail, password) {
   try {
-    const response = await axios.post(`${url}/auth/login`, { userId, userPw });
+    const response = await axios.post(`${url}/auth/login`, { mail, password });
     // if (!response.data.userNick) {
     //   return response.data.userId;
     // }
+    console.log(response.data)
     return response.data;
   } catch (error) {
     if (error.response) {
@@ -23,15 +24,12 @@ async function loginUser(userId, userPw) {
   }
 }
 
-// 회원가입 요청을 처리하는 서비스 함수
-async function signUpUser(userId, userPw, userMail, userPhone) {
+// 로컬 회원가입 함수
+async function localSignUp(mail, password,phone) {
   try {
-    console.log(url);
+    const provider = 0;
     const response = await axios.post(`${url}/auth/signup`, {
-      userId,
-      userPw,
-      userMail,
-      userPhone,
+      mail, password,phone,provider
     });
     return response.data;
   } catch (error) {
@@ -95,5 +93,5 @@ async function setProfile(userSeq, userNick, userContent, userImg) {
 }
 
 // 함수들을 한 번에 export
-export { loginUser, signUpUser, getUserSeq, setProfile, checkToken };
+export { login, localSignUp, getUserSeq, setProfile, checkToken };
 //export default AuthService;

@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 
-function OffcanvasExample() {
+function OffcanvasExample({ type, user,setIsLoggedIn }) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -98,7 +98,9 @@ function OffcanvasExample() {
               </svg>
             </Button>
           </InputGroup>
-          <Button variant="dark" onClick={handleLoginClick}>로그인</Button>
+          {user ? (<Button variant="dark">{user}</Button>):(<Button variant="dark" onClick={handleLoginClick}>로그인</Button>)
+          }
+  
         </Container>
       </Navbar>
     </>
