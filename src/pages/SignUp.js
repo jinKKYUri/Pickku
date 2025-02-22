@@ -2,54 +2,94 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { signUpUser } from "../services/AuthService";
+import { signUpUser, sendVerificationCode, verifyEmailCode } from "../services/AuthService";
 import TermsAgreement from "../components/TermsAgreement";
 import "../styles/SignUp.css";
 //회원가입
 function SignUp() {
 
   const [email, setEmail] = useState("");
-  const [usernick, setUserNick] = useState("");
+  const [nick, setNick] = useState("");
   const [password, setPassword] = useState("");
   const [checkPassword, setCheckPassword] = useState("");
   const [phone, setPhone] = useState("");
-  const [error, setError] = useState(null);
 
   const [isFormValid, setIsFormValid] = useState(false); // 폼 유효성 체크
-
-  const [agreedTerms, setAgreedTerms] = useState([]);
+  const [termsAgreement, setAgreedTerms] = useState([]);
   const [isTermsAgreed, setIsTermsAgreed] = useState(false); //약관 동의 상태
 
   const navigate = useNavigate();
+
+
+  //format 형식 조건
+  const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  const isValidNick = /^[가-힣a-zA-Z0-9]{1,10}$/.test(nick.trim()) && nick.length <= 10;
+  const isValidPassword = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/.test(password);
+  const isPasswordMatched = password === checkPassword;
+  const isValidPhone = /^01[016789]\d{7,8}$/.test(phone.trim());
+
+  //인증 요청 상태
+  const [isEmailVerificationRequested, setIsEmailVerificationRequested] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
+
+  //최종 인증 상태
+  const [isEmailVerified, setIsEmailVerified] = useState(false); // 이메일 인증 상태
+  const [isPhoneVerified, setIsPhoneVerified] = useState(false); // 핸드폰 인증 상태
+
+  const [errorMessage, setErrorMessage] = useState("");
+
   useEffect(() => {
-    const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
-    const isValiduserNick = /^[가-힣a-zA-Z0-9]{1,10}$/.test(usernick.trim()) && usernick.length <= 10;
-    const isValidPassword = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/.test(password);
-    const isPasswordMatched = password === checkPassword;
-    const isValidPhone = /^01[016789]\d{7,8}$/.test(phone.trim());
-
-
     setIsFormValid(
-      isValidEmail && isValiduserNick && isValidPassword && isPasswordMatched && isValidPhone
+      isValidEmail && isValidNick && isValidPassword && isPasswordMatched && isValidPhone
     );
-  }, [email, usernick, password, checkPassword, phone]);
+  }, [email, nick, password, checkPassword, phone]);
 
-  // ✅ 회원가입할 때 약관동의 같이 보내기! 
+
+  // ✅ 이메일 인증 번호 발송(+ 중복확인 )
+  const sendEmailCode = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await sendVerificationCode(email);
+      setErrorMessage(""); 
+      setIsEmailVerificationRequested(true);
+    } catch (error) {
+      setIsEmailVerificationRequested(false);
+      console.log("Error:", error.message);
+      setErrorMessage(error.message); 
+    }
+  };
+
+  // ✅ 이메일 인증 확인
+  const verifyEmail = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await verifyEmailCode(email, verificationCode);
+      if (response.isVerified) {
+        setErrorMessage("인증 확인");
+        setIsEmailVerified(true);
+      }
+    } catch (error) {
+      setIsEmailVerified(false);
+      setErrorMessage(error.message);
+    }
+  };
+
+
+  // ✅ 회원가입
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-      const response = await signUpUser(email, usernick, password, phone);
+      const response = await signUpUser(email, nick, password, phone, termsAgreement, "LOCAL");
       console.log(response);
       navigate("/setProfile", { state: { email: email } });
     } catch (error) {
-      setError(error.response?.data?.message || "회원가입 실패");
     }
   };
+
   const handleTermsChange = (newAgreedTerms) => {
     setAgreedTerms(newAgreedTerms);
   };
-  //이메일로 직접 가입 or 간편 가입
-  //본인인증 -> 약관동의 -> 정보입력 -> 완료
+
   return (
     <>
       <div className="content">
@@ -71,21 +111,43 @@ function SignUp() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
-                    <i></i>
+                    <div className={`verification-check ${(isEmailVerified) ? "verified" : ""}`}>&#10004;</div>
+                    <button
+                      className={`check-btn ${(!isValidEmail) ? "invalid" : "valid"}`}
+                      disabled={!isValidEmail || isEmailVerified}
+                      onClick={sendEmailCode}>
+                      이메일 인증 </button>
                   </div>
+
+                  {isEmailVerificationRequested && !isEmailVerified && (
+                    <div className="input-item verification-code">
+                      <input
+                        type="text"
+                        name="verificationCode"
+                        placeholder="인증 번호 입력"
+                        value={verificationCode}
+                        onChange={(e) => setVerificationCode(e.target.value)}
+                      />
+                      <button
+                        className="check-btn valid"
+                        onClick={verifyEmail}>
+                        인증 번호 확인</button>
+                    </div>
+                  )}
+                  {errorMessage && !isEmailVerified && <div className="error-message">{errorMessage}</div>}
                 </div>
                 <div className="input-box">
-                  <label className="" htmlFor="usernick">
+                  <label className="" htmlFor="nick">
                     닉네임
                     <span className="required">*</span>
                   </label>
                   <div className="input-item">
                     <input
                       type="text"
-                      name="usernick"
+                      name="nick"
                       placeholder="10자"
-                      value={usernick}
-                      onChange={(e) => setUserNick(e.target.value)}
+                      value={nick}
+                      onChange={(e) => setNick(e.target.value)}
                     />
                     <i></i>
                   </div>
@@ -135,6 +197,10 @@ function SignUp() {
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                     />
+                    <button
+                      className={`check-btn ${(!isValidPhone) ? "invalid" : "valid"}`}
+                      disabled={!isValidPhone}>
+                      핸드폰 인증 </button>
                   </div>
                 </div>
               </div>

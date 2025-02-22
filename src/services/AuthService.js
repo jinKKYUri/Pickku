@@ -5,17 +5,20 @@ const remoteurl = "http://wlsrb3469.iptime.org:8000";
 
 const url = remoteurl;
 
-// 로그인 요청을 처리하는 서비스 함수
-async function loginUser(userId, userPw) {
+
+async function signUpUser(mail, nick, password, phone, termsAgreement, provider) {
   try {
-    const response = await axios.post(`${url}/auth/login`, { userId, userPw });
-    // if (!response.data.userNick) {
-    //   return response.data.userId;
-    // }
+    const response = await axios.post(`${url}/auth/signup`, {
+      mail,
+      nick,
+      password,
+      phone,
+      provider,
+      termsAgreement,
+    });
     return response.data;
   } catch (error) {
     if (error.response) {
-      console.log(error.response.data.message);
       throw new Error(error.response.data.message);
     } else {
       throw new Error("서버 오류");
@@ -23,20 +26,37 @@ async function loginUser(userId, userPw) {
   }
 }
 
-// 회원가입 요청을 처리하는 서비스 함수
-// 약관 여부도 보내야됨
-async function signUpUser(userMail, userNick, userPw, userPhone) {
+// 이메일 중복 확인 및 인증번호 발송
+async function sendVerificationCode(mail) {
   try {
-    console.log(url);
-    const response = await axios.post(`${url}/auth/signup`, {
-      userMail,
-      userNick,
-      userPw,
-      userPhone,
-    });
+    const response = await axios.post(`${url}/auth/send-verification-code`, { mail });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response.data.message);
+  }
+}
+
+
+async function verifyEmailCode(mail, code) {
+  try {
+    const response = await axios.post(`${url}/auth/verify-email-code`, { mail, code });
+    
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response.data.message);
+  }
+};
+
+async function loginUser(mail, password) {
+  try {
+    const response = await axios.post(`${url}/auth/login`, { mail, password });
+    // if (!response.data.userNick) {
+    //   return response.data.userId;
+    // }
     return response.data;
   } catch (error) {
     if (error.response) {
+      console.log(error.response.data.message);
       throw new Error(error.response.data.message);
     } else {
       throw new Error("서버 오류");
@@ -96,5 +116,13 @@ async function setProfile(userSeq, userNick, userContent, userImg) {
 }
 
 // 함수들을 한 번에 export
-export { loginUser, signUpUser, getUserSeq, setProfile, checkToken };
+export {
+  loginUser,
+  signUpUser,
+  sendVerificationCode,
+  verifyEmailCode,
+  getUserSeq,
+  setProfile,
+  checkToken
+};
 //export default AuthService;

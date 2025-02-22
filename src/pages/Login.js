@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../services/AuthService";
-
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { ReactComponent as Logo } from "../assets/logo.svg";
 import "../styles/Login.css";
 import Header from "../components/Header";
+import { NaverLoginPopup } from "../services/NaverLoginService";
 
 function Login() {
   const [userMail, setUserMail] = useState("");
@@ -26,18 +26,22 @@ function Login() {
     }
   });
 
+  
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const response = await loginUser(userMail, password); // authService 호출
-      if (!response.token) {
+      console.log(response); 
+      if (!response.data.token) {
         navigate("/setProfile", { state: { userMail: response.userId, userSeq: response.userSeq } });
       } else {
-        setToken(response.token);
-        localStorage.setItem("token", response.token); // 토큰 저장
+        setToken(response.data.token);
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify({ provider: response.data.provider }));
+        console.log(response);
         console.log("로그인 성공")
         navigate("/"); // 로그인 성공 시 홈으로 이동
-        window.location.reload();
+       // window.location.reload();
       }
     } catch (error) {
       console.log(error);
@@ -45,6 +49,14 @@ function Login() {
     }
   };
 
+  const handleNaverLogin = async (e) => {
+    e.preventDefault();
+    NaverLoginPopup();
+  //  navigate("/");
+  };
+
+
+  
   return (
     <div>
       <div className="login">
@@ -85,7 +97,7 @@ function Login() {
                 <li><a className="link" href="/SignUp">회원가입</a></li>
               </ul>
               <div className="social-login">
-                <button className="btn_login_naver">
+                <button className="btn_login_naver" onClick={handleNaverLogin}>
                   <img
                     src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzA4MTBfMjkg%2FMDAxNTAyMzQ1NjgxMTcx.HN5OduMJB4wLP2Ryov53lcBW-UhIkXLXZdd_SRReFAgg.mL_h394FDyN7gsATSeFOYSoDYWMPnuLPSfcLkquAIdMg.PNG.baroniter%2Fnaver_pay_img_04.png&type=a340"
                     alt="Naver"

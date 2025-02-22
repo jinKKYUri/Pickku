@@ -15,7 +15,7 @@
     font-weight: 600;
 }
 
-.signup-area label{
+.signup-area label {
     display: block;
     font-weight: 600;
     font-size: .875rem;
@@ -24,13 +24,47 @@
 }
 
 /* 필수항목 *표시 */
-.required { 
+.required {
     color: rgb(239, 68, 68);
     margin-left: .40rem;
     font-weight: 700;
     font-size: 20px;
 }
 
+.input-item {
+    display: flex;
+    position: relative;
+    align-items: center;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-text-fill-color: #000;
+    -webkit-box-shadow: 0 0 0px 1000px #fff inset;
+    box-shadow: 0 0 0px 1000px #fff inset;
+    transition: background-color 5000s ease-in-out 0s;
+}
+.check-btn {
+    margin-left: 10px;
+    padding: 10px;
+    border: none;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 4px;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+}
+
+.check-btn.valid {
+    background-color: black;
+}
+
+.check-btn.invalid {
+    background-color: #cdcdcd!important;
+}
 
 /* 로그인 버튼 */
 .signup-button {
@@ -67,4 +101,39 @@
     cursor: default;
     font-weight: bold;
     padding: 0;
+}
+.input-item.verification-code {
+    margin-top: 10px;
+}
+
+.verification-code input {
+    border: 1px solid #ebebeb;
+    font-size: 15px;
+    letter-spacing: -.15px;
+    line-height: 22px;
+    padding: 12px !important;
+    width: 100%;
+    -webkit-appearance: none;
+    background-color: transparent;
+    border-radius: 5px;
+    outline: 0;
+    resize: none;
+}
+
+.verification-check {
+    position: absolute;
+    right: 118px;
+    margin: 0;
+    color: rgba(34, 34, 34, .2);
+    font-family: Arial, sans-serif;
+}
+
+.verification-check.verified {
+    color: rgba(2, 160, 2, 0.849); /* 인증 완료된 상태 */
+  }
+
+.error-message {
+    color: rgb(239, 68, 68);
+    margin-left: .40rem;
+    font-size: 14px;
 }

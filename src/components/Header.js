@@ -24,6 +24,7 @@ function Header({ type, user, isLoggedIn, setIsLoggedIn }) {
 
   const handleLogoutClick = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setIsLoggedIn(false);
     navigate("/");
     window.location.reload();
@@ -32,7 +33,7 @@ function Header({ type, user, isLoggedIn, setIsLoggedIn }) {
   const handleMyPageClick = () => {
     navigate(`/mypage/${user.id}`);
   };
-
+console.log(user);
   return (
     <header className="header">
       <div className="header-container">

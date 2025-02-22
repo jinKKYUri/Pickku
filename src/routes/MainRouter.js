@@ -7,6 +7,7 @@ import SignUp from "../pages/SignUp";
 import SetProfile from "../pages/SetProfile";
 import MyPage from "../pages/MyPage";
 import WriteBoard from "../pages/WriteBoard";
+import NaverCallback from "../pages/NaverCallback";
 
 // import ProtectedRoute from './ProtectedRoute';
 function MainRouter() {
@@ -14,6 +15,7 @@ function MainRouter() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/auth/naver/callback" element={<NaverCallback />} />
       <Route path="/signUp" element={<SignUp />} />
       <Route path="/setProfile" element={<SetProfile />} />
       <Route path="/mypage/:id" element={<MyPage />} />

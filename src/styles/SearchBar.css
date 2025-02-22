@@ -5,6 +5,13 @@
   border-radius: 20px;
 }
 
+@media (max-width: 750px) {
+
+  .search-bar-container {
+    display: none!important;
+  }
+}
+
 .search-bar-container {
   display: inline-flex;
   border: 1px solid #ccc;
