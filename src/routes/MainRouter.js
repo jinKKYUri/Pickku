@@ -1,25 +1,27 @@
 // src/routes/MainRouter.js
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "../pages/Home";
-import Login from "../pages/Login";
-import SignUp from "../pages/SignUp";
+import MainPage from "../pages/MainPage";
+import LoginPage from "../pages/LoginPage";
+import SignUpPage from "../pages/SignUpPage";
 import SetProfile from "../pages/SetProfile";
-import MyPage from "../pages/MyPage";
+import MyInfoPage from "../pages/MyInfoPage";
 import WriteBoard from "../pages/WriteBoard";
 import NaverCallback from "../pages/NaverCallback";
+import SignUpTypePage from "../pages/SignUpTypePage";
 
 // import ProtectedRoute from './ProtectedRoute';
 function MainRouter() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
+      <Route path="/" element={<MainPage />} />
+      <Route path="/login" element={<LoginPage />} />
       <Route path="/auth/naver/callback" element={<NaverCallback />} />
-      <Route path="/signUp" element={<SignUp />} />
+      <Route path="/signuptype" element={<SignUpTypePage />} />
+      <Route path="/signUp" element={<SignUpPage />} />
       <Route path="/setProfile" element={<SetProfile />} />
-      <Route path="/mypage/:id" element={<MyPage />} />
-      <Route path="/writeboard" element={<WriteBoard />} />
+      <Route path="/mypage/:id" element={<MyInfoPage />} />
+
       {/* ProtectedRoute로 보호되는 경로 */}
       {/* <Route path="/login" element={<ProtectedRoute component={Login} />} /> */}
 

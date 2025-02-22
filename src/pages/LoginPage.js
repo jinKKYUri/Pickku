@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/AuthService";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import { NaverLoginPopup } from "../services/NaverLoginService";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { ReactComponent as Logo } from "../assets/logo.svg";
 import "../styles/Login.css";
-import Header from "../components/Header";
-import { NaverLoginPopup } from "../services/NaverLoginService";
 
-function Login() {
-  const [userMail, setUserMail] = useState("");
+
+function LoginPage() {
+  const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
-  const isFormValid = userMail.trim() !== "" && password.trim() !== "";
+  const isFormValid = mail.trim() !== "" && password.trim() !== "";
 
   const [token, setToken] = useState("");
   const [error, setError] = useState(null);
@@ -26,14 +26,13 @@ function Login() {
     }
   });
 
-  
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await loginUser(userMail, password); // authService 호출
+      const response = await loginUser(mail, password); // authService 호출
       console.log(response); 
       if (!response.data.token) {
-        navigate("/setProfile", { state: { userMail: response.userId, userSeq: response.userSeq } });
+       // navigate("/setProfile", { state: { userMail: response.userId, userSeq: response.userSeq } });
       } else {
         setToken(response.data.token);
         localStorage.setItem("token", response.data.token);
@@ -52,7 +51,6 @@ function Login() {
   const handleNaverLogin = async (e) => {
     e.preventDefault();
     NaverLoginPopup();
-  //  navigate("/");
   };
 
 
@@ -63,15 +61,14 @@ function Login() {
         <div className="content">
           <div className="border-box">
             <Form className="login-area" onSubmit={handleLogin}>
-
               <div className="logo-title">
                 <Logo />
               </div>
               <Form.Group className="input-box" controlId="formBasicEmail">
                 <FloatingLabel controlId="floatingInput" label="이메일" className="input-title" />
                 <div className="input-item" >
-                  <Form.Control type="email" placeholder="name@example.com" value={userMail}
-                    onChange={(e) => setUserMail(e.target.value)} />
+                  <Form.Control type="email" placeholder="name@example.com" value={mail}
+                    onChange={(e) => setMail(e.target.value)} />
 
                 </div>
               </Form.Group>
@@ -94,10 +91,11 @@ function Login() {
               <ul className="auth-links">
                 <li><a className="link" href="#">이메일 찾기</a></li>
                 <li><a className="link" href="#">비밀번호 찾기</a></li>
-                <li><a className="link" href="/SignUp">회원가입</a></li>
+                <li><a className="link" href="/signuptype">회원가입</a></li>
               </ul>
               <div className="social-login">
                 <button className="btn_login_naver" onClick={handleNaverLogin}>
+
                   <img
                     src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzA4MTBfMjkg%2FMDAxNTAyMzQ1NjgxMTcx.HN5OduMJB4wLP2Ryov53lcBW-UhIkXLXZdd_SRReFAgg.mL_h394FDyN7gsATSeFOYSoDYWMPnuLPSfcLkquAIdMg.PNG.baroniter%2Fnaver_pay_img_04.png&type=a340"
                     alt="Naver"
@@ -115,7 +113,6 @@ function Login() {
                 </button>
               </div>
             </Form>
-
           </div>
         </div>
       </div>
@@ -123,4 +120,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginPage;

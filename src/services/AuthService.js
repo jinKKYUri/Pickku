@@ -5,7 +5,6 @@ const remoteurl = "http://wlsrb3469.iptime.org:8000";
 
 const url = remoteurl;
 
-
 async function signUpUser(mail, nick, password, phone, termsAgreement, provider) {
   try {
     const response = await axios.post(`${url}/auth/signup`, {
@@ -16,6 +15,7 @@ async function signUpUser(mail, nick, password, phone, termsAgreement, provider)
       provider,
       termsAgreement,
     });
+
     return response.data;
   } catch (error) {
     if (error.response) {
@@ -125,4 +125,5 @@ export {
   setProfile,
   checkToken
 };
+
 //export default AuthService;

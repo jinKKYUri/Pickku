@@ -2,9 +2,9 @@ import Header from "../components/Header";
 import React, { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { checkToken } from "../services/AuthService";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function MyPage({ setIsLoggedIn }) {
+function MyInfoPage({ setIsLoggedIn }) {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
@@ -146,4 +146,4 @@ function MyPage({ setIsLoggedIn }) {
   );
 }
 
-export default MyPage;
+export default MyInfoPage;
