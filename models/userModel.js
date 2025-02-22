@@ -2,28 +2,125 @@ const db = require("../config/db");
 
 
 // 20250216 최진규
-// 계정 생성 함수
-async function registUserModel(mail, provider, providerId, password) {
-    // const {mail, provider, providerId, password} =userData;
+// 사용자 계정 생성 함수
+async function registUserModel({ mail, provider, providerId, password }) {
+    console.log("userModel : registUserModel");
+    let providerValue;
+
+    if (provider === "LOCAL") {
+        providerValue = 0;
+    } else if (provider === "NAVER") {
+        providerValue = 3;
+    } else if (provider === "GOOGLE") {
+        providerValue = 1;
+    } else if (provider === "KAKAO") {
+        providerValue = 2;
+    }
     return new Promise((resolve, reject) => {
-        const query = "INSERT INTO userTable (mail,provider ,provider_id,password) VALUES (?, ?, ?, ?)";
-        db.query(query, [mail, provider, providerId, password], (err, result) => {
+        const query = "INSERT INTO userTable (mail, provider, provider_id, password) VALUES (?, ?, ?, ?)";
+        db.query(query, [mail, providerValue, providerId, password], (err, result) => {
             if (err) {
                 reject(err);
             } else {
-                // resolve({ id: result.insertId, ...userData });
-                console.log(result.insertId)
-                resolve({ id: result.insertId});
+                resolve({ id: result.insertId, mail, provider, providerId });
+            };
+        });
+    });
+}
+
+
+// 20250216 최진규
+// 초기 프로필 생성 함수
+async function registProfileModel({ userId, nick }) {
+    console.log(userId + " " + nick);
+    return new Promise((resolve, reject) => {
+        const query = "INSERT INTO profileTable (user_id, nick) VALUES (?, ?)";
+        db.query(query, [userId, nick], (err, result) => {
+            if (err) {
+                reject(err);
+                console.log(err);
+            } else {
+                resolve({ id: result.insertId, nick })
+            };
+        });
+    });
+}
+
+// 20250220 최규리
+// 약관 동의 정보 저장 함수
+async function registUserTermModel({ userId, termsAgreement }) {
+    const promises = Object.keys(termsAgreement).map((termId) => {
+
+        return new Promise((resolve, reject) => {
+            const agreed = termsAgreement[termId] ? 1 : 0;
+            const query = `INSERT INTO userTermTable (user_id, term_id, agreed) 
+                    VALUES (?, ?, ?) 
+                    ON DUPLICATE KEY UPDATE agreed = ?`;
+            db.query(query, [userId, termId, agreed], (err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    });
+
+    try {
+        // 모든 약관 항목에 대해 처리 완료 후 응답
+        await Promise.all(promises);  // 모든 비동기 작업이 완료될 때까지 기다림
+        return { message: '약관 동의 정보 저장 완료' };
+    } catch (error) {
+        throw error;
+    }
+}
+
+
+// 20250220 최규리
+// 핸드폰 인증 정보 저장 함수
+async function registPhoneAuthModel({ userId, phone }) {
+    return new Promise((resolve, reject) => {
+        const query = "INSERT INTO phoneAuthTable  (user_id, phone) VALUES (?, ?)";
+        db.query(query, [userId, phone], (err, result) => {
+            if (err) {
+                reject(err);
+                console.log(err);
+            } else {
+                resolve({ id: result.insertId, ...userData })
+            };
+        });
+    });
+}
+
+// 20250220 최규리
+// 프로필 업데이트 함수
+async function updateProfileModel({ userId, nick, intro, imageId }) {
+    return new Promise((resolve, reject) => {
+        const query = `
+        UPDATE profileTable
+        SET nick = ?, intro = ?, image_id = ?
+        WHERE user_id = ?
+      `;
+        db.query(query, [nick, intro, imageId, userId], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
             }
         });
     });
 }
 
+
 // 20250216 최진규
 // 메일로 계정 조회 함수
 async function getUserByMailModel(mail) {
     return new Promise((resolve, reject) => {
-        const query = "SELECT * FROM userTable WHERE mail = ?";
+        const query = `
+            SELECT u.*, p.*
+            FROM userTable u
+            LEFT JOIN profileTable p ON u.id = p.user_id
+            WHERE u.mail = ?`;
         db.query(query, [mail], (err, result) => {
             if (err) {
                 reject(err);
@@ -32,51 +129,32 @@ async function getUserByMailModel(mail) {
             if (result.length > 0) {
                 resolve(result[0]);
             }
-            else{
-                resolve(false);
-            }
-        });
-    });
-}
-
-
-// 20250216 최진규
-// 아이디로 계정 조회 함수
-async function getUserByIdModel(userId) {
-    return new Promise((resolve, reject) => {
-        const query = "SELECT * FROM userTable WHERE id = ?";
-        db.query(query, [userId], (err, result) => {
-            if (err) {
-                reject(err);
-                return;
-            }
-            if (result.length > 0) {
-                resolve(result[0]);
-            }
             else {
-                resolve(false);
+                resolve(null);
             }
+
         });
     });
 }
 
-
-// 20250216 최진규
-// 프로필 생성 함수
-async function registProfileModel(userId, nick, intro, imageId) {
+// 20250220 최규리
+// user 테이블에서 seq 값을 찾는 함수
+async function getUserSeqByNick(nick) {
     return new Promise((resolve, reject) => {
-        const query = "INSERT INTO profileTable (user_id,nick,intro,image_id) VALUES (?, ?,?)";
-        db.query(query, [userId, nick, intro, imageId], (err, result) => {
+        const query = "SELECT seq FROM userTable WHERE nick = ?";
+        db.query(query, [nick], (err, result) => {
             if (err) {
                 reject(err);
-                console.log(err);
             } else {
-                // resolve({ id: result.insertId, ...userData });
-                resolve({ id: result.insertId});
+                resolve(result[0]?.seq); // seq 값 반환
             }
         });
     });
 }
+
+
+
+
 
 //20250216 최진규
 // 닉네임 중복 확인
@@ -90,8 +168,8 @@ async function getProfileByNickModel(nick) {
             }
             if (result.length > 0) {
                 resolve(result[0]);
-            } else{
-                resolve(false);  
+            } else {
+                resolve(false);
             }
         });
     });
@@ -107,63 +185,38 @@ async function getProfileModel(userId) {
                 reject(err);
                 return;
             }
-            if (result.length > 0){
+            if (result.length > 0) {
                 resolve(result[0]);
             }
-            else{
+            else {
                 resolve(false);
             }
         });
     });
 }
 
-
-
-
-// 20241126 최규리
-//사용자 정보 가져오는 함수
-//닉네임만 가져올지 아니면 사용자 정보 전체를 가져올지 고민중
-//(모든 정보를 하나씩 가져오려면 함수가 너무 많아질 것 같아서)
-// async function getUserModel(userId) {
-//     return new Promise((resolve, reject) => {
-//         const query =
-//             `SELECT *
-//             FROM userTable
-//             INNER JOIN userProfileTable
-//             ON userTable.userSeq = userProfileTable.userSeq
-//             WHERE userTable.userId = ?`;
-//         db.query(query, [userId], (err, result) => {
-//             if (err) reject(err);
-//             else resolve(result[0]);
-//         });
-//     });
-// }
-
 //사용자 삭제 함수
-async function deleteUserModel(userId) {
+async function deleteUserModel(mail) {
     return new Promise((resolve, reject) => {
-        const query = "DELETE FROM userTable WHERE userId = ?";
-        db.query(query, [userId], (err, result) => {
-            if (err) { 
-                reject(err); 
+        const query = "DELETE FROM userTable WHERE mail = ?";
+        db.query(query, [mail], (err, result) => {
+            if (err) {
+                reject(err);
             }
-            else{
-                resolve(result);  
+            else {
+                resolve(result);
             }
         });
     });
 }
 
-
-async function test() {
-
-}
-
 module.exports = {
     registUserModel,
-    getUserByMailModel,
-    getUserByIdModel,
     registProfileModel,
-    getProfileByNickModel,
-    getProfileModel
+    registUserTermModel,
+    registPhoneAuthModel,
+    updateProfileModel,
+    getUserByMailModel,
+    getUserSeqByNick,
+    deleteUserModel,
 };
