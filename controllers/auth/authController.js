@@ -4,13 +4,12 @@ const { registUserService,
   sendVerificationCodeService,
   verifyEmailCodeService,
   getUserSeqService,
-  loginService } = require('../services/authService');
+  loginService } = require('../../services/auth/userService');
 
 // 회원가입
 async function registUserController(req, res) {
-  console.log(req.body)
-  const { mail, nick, password, phone, provider, termsAgreement } = req.body;
   try {
+    const { mail, nick, password, phone, provider, termsAgreement } = req.body;
     await registUserService(req.body);
     res.status(200).json({ message: '회원가입 성공' });
   } catch (error) {
@@ -19,28 +18,7 @@ async function registUserController(req, res) {
   }
 }
 
-async function sendVerificationCodeController(req, res) {
-  try {
-    const { mail } = req.body;
-    await sendVerificationCodeService(mail);
-    res.status(200).json({ message: '인증번호 발송' });
-  } catch (error) {
-    console.log("error : sendVerificationCodeController");
-    res.status(409).json({ message: error.message });
-  }
-}
 
-async function verifyEmailCodeController(req, res) {
-  try {
-    const { mail, code } = req.body;
-    await verifyEmailCodeService(mail, code);
-    res.status(200).json({ message: '이메일 인증 완료!', isVerified: true });
-  } catch (error) {
-    console.log("error : verifyEmailCodeController")
-    res.status(400).json({ message: error.message });
-    //res.status(422).json({ message: "인증 번호가 만료되었습니다." });
-  }
-}
 
 // 로그인
 async function localLoginController(req, res) {
@@ -56,6 +34,7 @@ async function localLoginController(req, res) {
     console.log(error);
   }
 }
+
 async function naverTokenController(req, res) {
   try {
     const { code, state } = req.body;
@@ -116,8 +95,6 @@ async function getUserSeqController(req, res) {
 
 module.exports = {
   registUserController,
-  sendVerificationCodeController,
-  verifyEmailCodeController,
   getUserSeqController,
   localLoginController,
   naverTokenController,

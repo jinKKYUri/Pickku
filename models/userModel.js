@@ -3,22 +3,10 @@ const db = require("../config/db");
 
 // 20250216 최진규
 // 사용자 계정 생성 함수
-async function registUserModel({ mail, provider, providerId, password }) {
-    console.log("userModel : registUserModel");
-    let providerValue;
-
-    if (provider === "LOCAL") {
-        providerValue = 0;
-    } else if (provider === "NAVER") {
-        providerValue = 3;
-    } else if (provider === "GOOGLE") {
-        providerValue = 1;
-    } else if (provider === "KAKAO") {
-        providerValue = 2;
-    }
+async function signUpModel({ mail, provider, providerId, password }) {
     return new Promise((resolve, reject) => {
         const query = "INSERT INTO userTable (mail, provider, provider_id, password) VALUES (?, ?, ?, ?)";
-        db.query(query, [mail, providerValue, providerId, password], (err, result) => {
+        db.query(query, [mail, provider, providerId, password], (err, result) => {
             if (err) {
                 reject(err);
             } else {
@@ -31,19 +19,46 @@ async function registUserModel({ mail, provider, providerId, password }) {
 
 // 20250216 최진규
 // 초기 프로필 생성 함수
-async function registProfileModel({ userId, nick }) {
-    console.log(userId + " " + nick);
+async function registProfileModel(userId ,nick,intro,imageId) {
     return new Promise((resolve, reject) => {
-        const query = "INSERT INTO profileTable (user_id, nick) VALUES (?, ?)";
-        db.query(query, [userId, nick], (err, result) => {
+        const query = "INSERT INTO profileTable (user_id, nick,intro,image_id) VALUES (?,?,?,?)";
+        db.query(query, [userId ,nick,intro,imageId], (err, result) => {
             if (err) {
                 reject(err);
-                console.log(err);
             } else {
                 resolve({ id: result.insertId, nick })
             };
         });
     });
+}
+
+// 20250301 최진규
+// 이미지 등록 함수
+async function registImageModel(userId,imagePath,type) {
+    return new Promise((resolve, reject) => {
+        const query = "INSERT INTO imageTable (user_id,image_path,type) VALUES (?,?,?,?)";
+        db.query(query, [userId ,imagePath,type], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve({ id: result.insertId, imagePath })
+            };
+        });
+    });
+}
+
+//250301 최진규
+async function getImageModel(imageId){
+    return new Promise((resolve,reject)=>{
+        const query = "SELECT user_id,image_path,type FROM imageTable WHERE image_id = ?"
+        db.query(query,[imageId], (err,result)=>{
+            if(err){
+                reject(err);
+            }else{
+                resolve(result[0])
+            }
+        })
+    })
 }
 
 // 20250220 최규리
@@ -211,8 +226,9 @@ async function deleteUserModel(mail) {
 }
 
 module.exports = {
-    registUserModel,
+    signUpModel,
     registProfileModel,
+    registImageModel,
     registUserTermModel,
     registPhoneAuthModel,
     updateProfileModel,
