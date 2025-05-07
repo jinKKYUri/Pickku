@@ -177,7 +177,7 @@ function Navbar() {
                 )}
               </button>
               {/* 로고 */}
-              <Link to="/" className="text-2xl font-extrabold text-foreground">
+              <Link to="/" className="text-2xl font-extrabold" style={{ color: '#EA5550' }}>
                 Pickku
               </Link>
             </div>
