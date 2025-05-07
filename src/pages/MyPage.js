@@ -286,11 +286,7 @@ function MyPage() {
               <div className="grid grid-cols-1 gap-4">
                 {user?.projects.map((project) => (
                   <div key={project.id} className="border rounded-lg overflow-hidden">
-                    {/* 전문가일 경우에만 이미지 표시 */}
-                    {user?.role === 'EXPERT' && (
-                      <div className="aspect-video bg-gray-100"></div>
-                    )}
-                    <div className={`p-4 ${user?.role !== 'EXPERT' ? 'border-l-4 border-l-gray-200' : ''}`}>
+                    <div className="p-4 border-l-4 border-l-gray-200">
                       <div className="flex items-center justify-between mb-2">
                         <h3 className="font-semibold">{project.title}</h3>
                         <span className={`px-2 py-1 text-sm rounded-full ${project.status === '진행중'
