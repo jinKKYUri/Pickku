@@ -1,14 +1,7 @@
-import { BrowserRouter as Router } from "react-router-dom";
-import MainRouter from "./routes/MainRouter";
-import Navbar from "./components/Navbar";
+import MainRouter from "./utils/MainRouter";
 
 function App() {
-  return (
-    <Router>
-      <Navbar />
-      <MainRouter />
-    </Router>
-  );
+  return <MainRouter />;
 }
 
 export default App;

@@ -1,144 +1,158 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { loginUser } from "../services/AuthService";
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Login() {
-  const [userId, setUserId] = useState("");
-  const [password, setPassword] = useState("");
-  const isFormValid = userId.trim() !== "" && password.trim() !== "";
-
-  const [token, setToken] = useState("");
-  const [error, setError] = useState(null);
-
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      navigate("/");
-    }
-  });
-
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+
     try {
-      const response = await loginUser(userId, password); // authService 호출
-      console.log(response);
-      if (!response.token.userNick) {
-        navigate("/setProfile", { state: { userId: userId } });
-      } else {
-        setToken(response.token);
-        localStorage.setItem("token", response.token); // 토큰 저장
-        navigate("/"); // 로그인 성공 시 홈으로 이동
-        window.location.reload();
-      }
+      // TODO: 로그인 API 연동
+      console.log('로그인 시도:', { email, password, rememberMe });
+      // 임시로 2초 후 홈으로 이동
+      setTimeout(() => {
+        navigate('/');
+      }, 2000);
     } catch (error) {
-      console.log(error);
-      setError(error.response?.data?.message || "로그인 실패");
+      console.error('로그인 실패:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    // <div className="css-zoj6jx etxqne21">
-    <>
-      <div className="md:pt-[30px] xl:gap-[50px] mx-auto max-w-screen-xl w-full">
-        <div className="relative left-1/2 max-w-3xl w-full flex flex-col overflow-hidden md:mb-[60px] md:mt-[10px] md:flex-row md:rounded-3 -translate-x-1/2 border-0 sm:border-2 sm:rounded-lg sm:border-gray-250">
-          <div className="relative z-20 grow rounded-t-[12px] bg-white px-[16px] py-[50px] md:rounded-0 md:px-[40px] ">
-            <h2 className="mb-[38px] text-center text-xl font-semibold">
-              로그인
-            </h2>
-            <form onSubmit={handleLogin}>
-              <div className="space-y-[10px]">
-                <div>
-                  <label
-                    className="text-sm font-semibold block sr-only"
-                    htmlFor="userId"
-                  >
-                    이메일 주소
-                    <span className="ml-1 inline-block text-red-500">
-                      <span className="sr-only">필수 항목</span>
-                    </span>
-                  </label>
-                  <input
-                    id="userId"
-                    className="block w-full h-[41px] rounded border bg-white px-4 py-2 ring-inset transition hover:bg-gray-100 focus:ring-2 focus:ring-gray-500 disabled:bg-gray-50 disabled:text-gray-400 disabled:placeholder-gray-300 focus:ring-gray-500"
-                    type="text"
-                    name="userId"
-                    placeholder="아이디"
-                    value={userId}
-                    onChange={(e) => setUserId(e.target.value)}
-                    autoComplete="current-userId"
-                  />
-                </div>
-                <div>
-                  <label
-                    className="text-sm font-semibold block sr-only"
-                    htmlFor="password"
-                  >
-                    비밀번호
-                    <span className="ml-1 inline-block text-red-500">
-                      * <span className="sr-only">필수 항목</span>
-                    </span>
-                  </label>
-                  <input
-                    id="password"
-                    className="block w-full h-[41px] rounded border bg-white px-4 py-2 ring-inset transition hover:bg-gray-100 focus:ring-2 focus:ring-gray-500 disabled:bg-gray-50 disabled:text-gray-400 disabled:placeholder-gray-300 focus:ring-gray-500"
-                    type="password"
-                    name="password"
-                    placeholder="비밀번호"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    autoComplete="current-password"
-                  />
-                </div>
-              </div>
-              {error && <p style={{ color: "red" }}>{error}</p>}
+    <div className="w-full space-y-8">
+      {/* 헤더 */}
+      <div className="text-center">
+        <Link to="/" className="inline-block mb-6">
+          <h1 className="text-4xl font-extrabold text-foreground">Pickku</h1>
+        </Link>
+      </div>
 
-              <button
-                type="submit"
-                disabled={!isFormValid} // 유효하지 않은 경우 비활성화
-                className={`items-center justify-center flex flex-none gap-2 rounded px-4 py-2 font-semibold transition duration-300 text-white ${
-                  isFormValid ? "bg-pink-500" : "bg-gray-300 cursor-not-allowed"
-                } mt-[38px] h-[45px] w-full`}
-              >
-                로그인
-              </button>
-            </form>
-            <div className="mt-[38px]">
-              <h3 className="relative mb-[20px] text-center text-sm text-gray-500 before:absolute before:top-1/2 before:block before:w-full before:border-t before:content-empty before:-z-1">
-                <span className="relative bg-white px-[12px] z-10">
-                  간편 로그인하기
-                </span>
-              </h3>
-              <div className="flex justify-center gap-[25px]">
-                <button className="h-[50px] w-[50px] flex both-center gap-2 border rounded-full text-sm font-semibold transition hover:border-gray-300">
-                  <img
-                    src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzA4MTBfMjkg%2FMDAxNTAyMzQ1NjgxMTcx.HN5OduMJB4wLP2Ryov53lcBW-UhIkXLXZdd_SRReFAgg.mL_h394FDyN7gsATSeFOYSoDYWMPnuLPSfcLkquAIdMg.PNG.baroniter%2Fnaver_pay_img_04.png&type=a340"
-                    alt="Naver"
-                    className="h-[50px] w-[50px] rounded-full"
-                  />
-                  <span className="sr-only">네이버 계정으로 로그인하기</span>
-                </button>
-                <button className="h-[50px] w-[50px] flex both-center gap-2 border rounded-full text-sm font-semibold transition hover:border-gray-300">
-                  <img
-                    src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2F20150902_266%2Fairishj01_1441151685011H1zoF_JPEG%2F11813434_10153577767937838_3231184993169792009_n.jpg&type=a340"
-                    alt="Naver"
-                    className="h-[50px] w-[50px] rounded-full"
-                  />
-                  <span className="sr-only">구글 계정으로 로그인하기</span>
-                </button>
-              </div>
-            </div>
-            <div className="mx-auto mt-[20px] block text-center text-sm text-gray-700 space-x-[10px]">
-              <span>계정이 없으신가요?</span>
-              <Link to="/SignUp">
-                <span className="font-semibold underline">회원가입 하기</span>
-              </Link>
-            </div>
-          </div>
+      {/* 소셜 로그인 */}
+      <div className="space-y-3">
+        <button
+          type="button"
+          className="flex w-full items-center justify-center gap-3 rounded-md border border-border bg-background px-3 py-2 text-sm font-semibold text-foreground hover:bg-muted transition-colors"
+        >
+          <svg className="h-5 w-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84" />
+          </svg>
+          Twitter로 계속하기
+        </button>
+
+        <button
+          type="button"
+          className="flex w-full items-center justify-center gap-3 rounded-md border border-border bg-background px-3 py-2 text-sm font-semibold text-foreground hover:bg-muted transition-colors"
+        >
+          <svg className="h-5 w-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clipRule="evenodd" />
+          </svg>
+          GitHub로 계속하기
+        </button>
+      </div>
+
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-border" />
+        </div>
+        <div className="relative flex justify-center text-sm">
+          <span className="bg-background px-2 text-muted-foreground">또는</span>
         </div>
       </div>
-    </>
+
+      {/* 로그인 폼 */}
+      <form className="space-y-6" onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="email" className="block text-sm font-medium text-foreground">
+            이메일
+          </label>
+          <div className="mt-1">
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="input w-full"
+              placeholder="name@company.com"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label htmlFor="password" className="block text-sm font-medium text-foreground">
+            비밀번호
+          </label>
+          <div className="mt-1">
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="input w-full"
+              placeholder="••••••••"
+            />
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <input
+              id="remember-me"
+              name="remember-me"
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
+            />
+            <label htmlFor="remember-me" className="ml-2 block text-sm text-muted-foreground">
+              로그인 상태 유지
+            </label>
+          </div>
+
+          <div className="text-sm">
+            <Link to="/forgot-password" className="font-semibold text-primary hover:text-primary-hover">
+              비밀번호를 잊으셨나요?
+            </Link>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="btn btn-primary w-full flex justify-center items-center text-base py-3 h-12 font-semibold"
+          >
+            {isLoading ? (
+              <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              </svg>
+            ) : null}
+            {isLoading ? '로그인 중...' : '로그인'}
+          </button>
+
+          <p className="text-center text-sm text-muted-foreground">
+            아직 계정이 없으신가요?{' '}
+            <Link to="/signup" className="font-semibold text-primary hover:text-primary-hover">
+              회원가입
+            </Link>
+          </p>
+        </div>
+      </form>
+    </div>
   );
 }
 
