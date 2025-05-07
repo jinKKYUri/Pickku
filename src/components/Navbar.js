@@ -123,7 +123,8 @@ function Navbar() {
     const token = localStorage.getItem('token');
 
     if (userInfo && token) {
-      setUser(JSON.parse(userInfo));
+      const parsedUserInfo = JSON.parse(userInfo);
+      setUser(parsedUserInfo);
       setIsLoggedIn(true);
     }
   }, []);
@@ -141,6 +142,14 @@ function Navbar() {
     if (window.innerWidth < 768) {
       setIsSearchModalOpen(true);
     }
+  };
+
+  // 마이페이지 URL 생성 함수
+  const getMyPageUrl = () => {
+    if (!user) return '/mypage';
+    // userId가 있으면 그것을 사용하고, 없으면 id를 사용
+    const pageId = user.userId || user.id;
+    return `/mypage/${user.role === 'EXPERT' ? 'expert123' : 'user123'}`;
   };
 
   return (
@@ -225,7 +234,7 @@ function Navbar() {
                   {isProfileDropdownOpen && (
                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-gray-200 z-50">
                       <Link
-                        to={`/mypage/${user?.id}`}
+                        to={getMyPageUrl()}
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         onClick={() => setIsProfileDropdownOpen(false)}
                       >
@@ -395,7 +404,7 @@ function Navbar() {
                         <span className="text-base font-medium text-gray-700">{user?.nickname || 'test'}</span>
                       </div>
                       <Link
-                        to={`/mypage/${user?.id}`}
+                        to={getMyPageUrl()}
                         className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         onClick={() => setIsMenuOpen(false)}
                       >
