@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { checkToken } from "../services/AuthService";
 
@@ -7,6 +7,7 @@ function MyPage() {
   const { userId } = useParams();
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -34,9 +35,21 @@ function MyPage() {
         {/* 프로필 섹션 */}
         <section className="bg-background border rounded-lg p-6 mb-8">
           <div className="flex items-center space-x-4">
-            <div className="w-24 h-24 rounded-full bg-muted" />
+            <div className="w-24 h-24 rounded-lg bg-gray-200 flex items-center justify-center">
+              {user?.profileImage ? (
+                <img
+                  src={user.profileImage}
+                  alt="프로필"
+                  className="w-full h-full rounded-lg object-cover"
+                />
+              ) : (
+                <svg className="w-12 h-12 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                </svg>
+              )}
+            </div>
             <div>
-              <h1 className="text-2xl font-semibold">{user?.name || "사용자"}</h1>
+              <h1 className="text-2xl font-semibold">{user?.nickname || user?.name || "사용자"}</h1>
               <p className="text-muted-foreground">{user?.email || "이메일"}</p>
             </div>
           </div>
@@ -77,7 +90,12 @@ function MyPage() {
                   프로필 사진과 기본 정보를 수정합니다
                 </p>
               </div>
-              <button className="btn btn-ghost">수정</button>
+              <button
+                onClick={() => navigate('/profileEdit')}
+                className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
+              >
+                수정
+              </button>
             </div>
             <div className="flex justify-between items-center p-4 bg-muted rounded-lg">
               <div>

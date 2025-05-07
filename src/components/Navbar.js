@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { checkToken } from "../services/AuthService";
@@ -113,30 +113,27 @@ function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const getUserInfo = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) return;
+    // localStorage에서 사용자 정보 확인
+    const userInfo = localStorage.getItem('userInfo');
+    const token = localStorage.getItem('token');
 
-      try {
-        await checkToken(token);
-        const userInfo = jwtDecode(token);
-        setUser(userInfo);
-        setIsLoggedIn(true);
-      } catch (error) {
-        console.error("토큰 검증 실패:", error);
-      }
-    };
-
-    getUserInfo();
+    if (userInfo && token) {
+      setUser(JSON.parse(userInfo));
+      setIsLoggedIn(true);
+    }
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem('token');
+    localStorage.removeItem('userInfo');
     setUser(null);
     setIsLoggedIn(false);
+    navigate('/');
   };
 
   const handleSearchClick = () => {
@@ -200,20 +197,60 @@ function Navbar() {
             {/* 데스크톱 로그인/회원가입 버튼 */}
             <div className="hidden md:flex items-center gap-4">
               {isLoggedIn ? (
-                <>
-                  <Link
-                    to={`/mypage/${user?.id}`}
-                    className="text-base font-semibold text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    마이페이지
-                  </Link>
+                <div className="relative">
                   <button
-                    onClick={handleLogout}
-                    className="text-base font-semibold text-muted-foreground hover:text-foreground transition-colors"
+                    onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                    onBlur={() => setTimeout(() => setIsProfileDropdownOpen(false), 100)}
+                    className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-lg"
                   >
-                    로그아웃
+                    <div className="w-8 h-8 rounded-lg bg-gray-200 flex items-center justify-center">
+                      {user?.profileImage ? (
+                        <img
+                          src={user.profileImage}
+                          alt="프로필"
+                          className="w-full h-full rounded-lg object-cover"
+                        />
+                      ) : (
+                        <svg className="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                    </div>
+                    <span className="text-sm font-medium text-gray-700">{user?.nickname || 'test'}</span>
+                    <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                    </svg>
                   </button>
-                </>
+
+                  {isProfileDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-gray-200 z-50">
+                      <Link
+                        to={`/mypage/${user?.id}`}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setIsProfileDropdownOpen(false)}
+                      >
+                        마이페이지
+                      </Link>
+                      <Link
+                        to="/orders"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setIsProfileDropdownOpen(false)}
+                      >
+                        주문관리
+                      </Link>
+                      <hr className="my-1 border-gray-200" />
+                      <button
+                        onClick={() => {
+                          handleLogout();
+                          setIsProfileDropdownOpen(false);
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        로그아웃
+                      </button>
+                    </div>
+                  )}
+                </div>
               ) : (
                 <>
                   <Link
@@ -278,18 +315,17 @@ function Navbar() {
               {/* 카테고리 드롭다운 */}
               <div className="relative flex items-center">
                 <button
-                  onMouseEnter={() => setIsDropdownOpen(true)}
-                  onMouseLeave={() => setIsDropdownOpen(false)}
+                  onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
+                  onBlur={() => setTimeout(() => setIsCategoryDropdownOpen(false), 100)}
                   className="text-base font-semibold text-muted-foreground hover:text-foreground transition-colors flex items-center"
                 >
                   카테고리
+                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
                 </button>
-                {isDropdownOpen && (
-                  <div
-                    onMouseEnter={() => setIsDropdownOpen(true)}
-                    onMouseLeave={() => setIsDropdownOpen(false)}
-                    className="absolute top-full left-0 w-48 py-2 mt-1 bg-background rounded-md shadow-lg border border-border z-50"
-                  >
+                {isCategoryDropdownOpen && (
+                  <div className="absolute top-full left-0 w-48 py-2 mt-1 bg-background rounded-md shadow-lg border border-border z-40">
                     {categories.map((category) => (
                       <Link
                         key={category.path}
@@ -342,19 +378,42 @@ function Navbar() {
                 <div className="p-4 border-b border-border">
                   {isLoggedIn ? (
                     <>
+                      <div className="flex items-center gap-3 px-3 py-2">
+                        <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">
+                          {user?.profileImage ? (
+                            <img
+                              src={user.profileImage}
+                              alt="프로필"
+                              className="w-full h-full rounded-lg object-cover"
+                            />
+                          ) : (
+                            <svg className="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                            </svg>
+                          )}
+                        </div>
+                        <span className="text-base font-medium text-gray-700">{user?.nickname || 'test'}</span>
+                      </div>
                       <Link
                         to={`/mypage/${user?.id}`}
-                        className="block px-3 py-2 rounded-md text-base font-semibold text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                        className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         onClick={() => setIsMenuOpen(false)}
                       >
                         마이페이지
+                      </Link>
+                      <Link
+                        to="/orders"
+                        className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        주문관리
                       </Link>
                       <button
                         onClick={() => {
                           handleLogout();
                           setIsMenuOpen(false);
                         }}
-                        className="block w-full text-left px-3 py-2 rounded-md text-base font-semibold text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                        className="block w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
                         로그아웃
                       </button>

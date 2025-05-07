@@ -4,7 +4,8 @@ import { Routes, Route } from "react-router-dom";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import SignUp from "../pages/SignUp";
-import SetProfile from "../pages/SetProfile";
+import SignUpComplete from "../pages/SignUpComplete";
+import ProfileEdit from "../pages/ProfileEdit";
 import MyPage from "../pages/MyPage";
 import WriteBoard from "../pages/WriteBoard";
 import NotFound from "../pages/NotFound";
@@ -25,7 +26,7 @@ function MainRouter() {
 
         {/* 기본 레이아웃을 사용하는 페이지 */}
         <Route path="/" element={<DefaultLayout><Home /></DefaultLayout>} />
-        <Route path="/setProfile" element={<DefaultLayout><SetProfile /></DefaultLayout>} />
+        <Route path="/profileEdit" element={<DefaultLayout><ProfileEdit /></DefaultLayout>} />
         <Route path="/mypage/:id" element={<DefaultLayout><MyPage /></DefaultLayout>} />
         <Route path="/writeboard" element={<DefaultLayout><WriteBoard /></DefaultLayout>} />
         <Route path="/categories" element={<DefaultLayout><Categories /></DefaultLayout>} />

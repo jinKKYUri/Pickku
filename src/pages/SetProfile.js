@@ -1,147 +1,171 @@
 // jk_fe/src/pages/SignUp.js
 
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { getUserSeq, setProfile } from "../services/AuthService";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function InputBox(props) {
-  <div>
-    <label className="text-sm font-semibold block sr-only" htmlFor="email">
-      {props.label}
-      <span className="ml-1 inline-block text-red-500">
-        <span className="sr-only">필수 항목</span>
-      </span>
-    </label>
-    <input
-      id={props.id}
-      className="block w-full h-[41px] rounded border bg-white px-4 py-2 ring-inset transition hover:bg-gray-100 focus:ring-2 focus:ring-gray-500 disabled:bg-gray-50 disabled:text-gray-400 disabled:placeholder-gray-300 focus:ring-gray-500"
-      type={props.type}
-      name={props.name}
-      placeholder={props.placeholder}
-      value={props.value}
-      onChange={props.onChange}
-    />
-  </div>;
-}
-
-//프로필 저장
-function SetProfile() {
-  const [userSeq, setUserSeq] = useState("");
-  const [userNick, setUserNick] = useState("");
-  const [userContent, setUserContent] = useState("");
-  const [userImg, setUserImg] = useState("");
-  const location = useLocation();
-  const { userId } = location.state || {};
-
+const SetProfile = () => {
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    nickname: '',
+    profileImage: null,
+    introduction: '',
+    interests: [],
+  });
 
-  const isFormValid = userNick.trim() !== "";
-  // const isFormValid = userNick.trim() !== "" && userContent.trim() !== "";
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
-  useEffect(() => {
-    const getSeq = async () => {
-      try {
-        const response = await getUserSeq(userId);
-        setUserSeq(response);
-      } catch (error) {
-        console.log(error);
-        navigate("/");
-      }
-    };
-    getSeq();
-  }, [userId]);
-
-  const handleSetProfile = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await setProfile(
-        userSeq,
-        userNick,
-        userContent,
-        userImg
-      ); // signupUser 호출
-      // const response = await getUserSeq(userId);
-      // console.log(response.data)
-      // setUserSeq(response)
-      console.log("qwe");
-      navigate("/");
-    } catch (error) {
-      console.log(error);
-      console.error("로그인 실패:", error.message);
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData(prev => ({
+        ...prev,
+        profileImage: file
+      }));
     }
   };
-  return (
-    <div className="relative left-1/2 max-w-3xl w-full flex flex-col overflow-hidden md:mb-[60px] md:mt-[10px] md:flex-row md:rounded-3 -translate-x-1/2 border-0 sm:border-2 sm:rounded-lg sm:border-gray-250">
-      <div className="relative z-20 grow rounded-t-[12px] bg-white px-[16px] py-[50px] md:rounded-0 md:px-[40px] ">
-        <h2 className="mb-[38px] text-center text-xl font-semibold">프로필</h2>
-        <form onSubmit={handleSetProfile}>
-          <div className="space-y-[10px]">
-            {userId && <p style={{ color: "red" }}>{userId}</p>}
-            {userSeq && <p style={{ color: "red" }}>{userSeq}</p>}
-            <InputBox
-              label="닉네임"
-              id="userNick"
-              type="text"
-              name="userNick"
-              placeholder="닉네임"
-              value={userNick}
-              onChange={(e) => setUserNick(e.target.value)}
-            />
-            <div>
-              <label
-                className="text-sm font-semibold block sr-only"
-                htmlFor="email"
-              >
-                닉네임
-                <span className="ml-1 inline-block text-red-500">
-                  <span className="sr-only">필수 항목</span>
-                </span>
-              </label>
-              <input
-                id="userNick"
-                className="block w-full h-[41px] rounded border bg-white px-4 py-2 ring-inset transition hover:bg-gray-100 focus:ring-2 focus:ring-gray-500 disabled:bg-gray-50 disabled:text-gray-400 disabled:placeholder-gray-300 focus:ring-gray-500"
-                type="text"
-                name="userNick"
-                placeholder="닉네임"
-                value={userNick}
-                onChange={(e) => setUserNick(e.target.value)}
-              />
-            </div>
 
-            <div>
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // 프로필 설정 완료 로직 구현 예정
+    navigate('/');
+  };
+
+  const interests = ['디자인', '일러스트', '웹개발', 'UI/UX', '3D 모델링', '애니메이션'];
+
+  return (
+    <div className="w-full max-w-2xl mx-auto p-6 space-y-8">
+      <div className="text-center">
+        <h2 className="text-3xl font-bold text-gray-900">프로필 설정</h2>
+        <p className="mt-2 text-sm text-gray-600">
+          프로필을 설정하고 Pickku를 시작해보세요
+        </p>
+      </div>
+
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="flex items-center justify-center">
+            <div className="relative">
+              <div className="h-32 w-32 rounded-full overflow-hidden bg-gray-100 border-4 border-white shadow-lg">
+                {formData.profileImage ? (
+                  <img
+                    src={URL.createObjectURL(formData.profileImage)}
+                    alt="Profile preview"
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                )}
+              </div>
               <label
-                className="text-sm font-semibold block sr-only"
-                htmlFor="password"
+                htmlFor="profile-image"
+                className="absolute bottom-0 right-0 bg-pink-500 text-white p-2 rounded-full cursor-pointer shadow-md hover:bg-pink-600 transition-colors"
               >
-                자기소개
-                <span className="ml-1 inline-block text-red-500">
-                  * <span className="sr-only">필수 항목</span>
-                </span>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
               </label>
               <input
-                id="userContent"
-                className="block w-full h-[41px] rounded border bg-white px-4 py-2 ring-inset transition hover:bg-gray-100 focus:ring-2 focus:ring-gray-500 disabled:bg-gray-50 disabled:text-gray-400 disabled:placeholder-gray-300 focus:ring-gray-500"
-                type="text"
-                name="userContent"
-                placeholder="자기소개"
-                value={userContent}
-                onChange={(e) => setUserContent(e.target.value)}
+                id="profile-image"
+                name="profileImage"
+                type="file"
+                className="hidden"
+                accept="image/*"
+                onChange={handleImageChange}
               />
             </div>
           </div>
-          <button
-            type="submit"
-            disabled={!isFormValid} // 유효하지 않은 경우 비활성화
-            className={`items-center justify-center flex flex-none gap-2 rounded px-4 py-2 font-semibold transition duration-300 text-white ${
-              isFormValid ? "bg-pink-500" : "bg-gray-300 cursor-not-allowed"
-            } mt-[38px] h-[45px] w-full`}
-          >
-            프로필 저장
-          </button>
+
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="nickname" className="block text-sm font-medium text-gray-700">
+                닉네임
+                <span className="text-red-500 ml-1">*</span>
+              </label>
+              <input
+                type="text"
+                name="nickname"
+                id="nickname"
+                required
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-pink-500 focus:border-pink-500"
+                value={formData.nickname}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="introduction" className="block text-sm font-medium text-gray-700">
+                자기소개
+              </label>
+              <textarea
+                id="introduction"
+                name="introduction"
+                rows={4}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-pink-500 focus:border-pink-500"
+                value={formData.introduction}
+                onChange={handleInputChange}
+                placeholder="자신을 소개해주세요"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                관심사
+              </label>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {interests.map((interest) => (
+                  <label
+                    key={interest}
+                    className={`flex items-center justify-center p-3 border rounded-lg cursor-pointer transition-colors
+                      ${formData.interests.includes(interest)
+                        ? 'bg-pink-50 border-pink-500 text-pink-700'
+                        : 'hover:bg-gray-50 border-gray-200'
+                      }`}
+                  >
+                    <input
+                      type="checkbox"
+                      className="hidden"
+                      checked={formData.interests.includes(interest)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setFormData(prev => ({
+                            ...prev,
+                            interests: [...prev.interests, interest]
+                          }));
+                        } else {
+                          setFormData(prev => ({
+                            ...prev,
+                            interests: prev.interests.filter(i => i !== interest)
+                          }));
+                        }
+                      }}
+                    />
+                    <span className="text-sm font-medium">{interest}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-4">
+            <button
+              type="submit"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-semibold text-white bg-pink-500 hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-colors"
+            >
+              설정 완료
+            </button>
+          </div>
         </form>
       </div>
     </div>
   );
-}
+};
 
 export default SetProfile;
