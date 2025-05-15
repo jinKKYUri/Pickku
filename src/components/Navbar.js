@@ -156,7 +156,7 @@ function Navbar() {
     <div className="sticky top-0 z-50">
       {/* 상단 네비게이션 */}
       <nav className="bg-background">
-        <div className="container mx-auto px-4">
+        <div className="max-w-[1200px] mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             {/* 로고 및 모바일 메뉴 버튼 */}
             <div className="flex items-center gap-4">
@@ -269,7 +269,7 @@ function Navbar() {
                     로그인
                   </Link>
                   <Link
-                    to="/signUp"
+                    to="/signup"
                     className="inline-flex items-center justify-center px-6 py-2 text-base font-semibold text-white bg-primary hover:bg-primary-hover transition-colors rounded-lg"
                   >
                     회원가입
@@ -317,7 +317,7 @@ function Navbar() {
 
       {/* 하단 메뉴 */}
       <nav className="bg-background border-b border-border/40">
-        <div className="container mx-auto px-4">
+        <div className="max-w-[1200px] mx-auto px-4">
           <div className="flex h-10 md:h-12 items-center">
             {/* 데스크톱 메뉴 */}
             <div className="hidden md:flex items-center gap-6">
@@ -437,7 +437,7 @@ function Navbar() {
                         로그인
                       </Link>
                       <Link
-                        to="/signUp"
+                        to="/signup"
                         className="block px-3 py-2 rounded-md text-base font-semibold text-white bg-primary hover:bg-primary-hover transition-colors"
                         onClick={() => setIsMenuOpen(false)}
                       >

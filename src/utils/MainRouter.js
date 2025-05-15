@@ -5,14 +5,15 @@ import Home from "../pages/Home";
 import Login from "../pages/Login";
 import SignUp from "../pages/SignUp";
 import SignUpComplete from "../pages/SignUpComplete";
-import ProfileEdit from "../pages/ProfileEdit";
-import MyPage from "../pages/MyPage";
-import WriteBoard from "../pages/WriteBoard";
+import ProfileEdit from "../pages/user/ProfileEdit";
+import MyPage from "../pages/user/MyPage";
 import NotFound from "../pages/NotFound";
 import Categories from "../pages/Categories";
 import DefaultLayout from "../components/layouts/DefaultLayout";
 import AuthLayout from "../components/layouts/AuthLayout";
 import ScrollToTop from "../components/ScrollToTop";
+import PortfolioList from "../pages/portfolio/PortfolioList";
+import PortfolioDetail from "../pages/portfolio/Detail";
 
 // import ProtectedRoute from './ProtectedRoute';
 function MainRouter() {
@@ -22,14 +23,15 @@ function MainRouter() {
       <Routes>
         {/* 인증이 필요한 페이지 */}
         <Route path="/login" element={<AuthLayout><Login /></AuthLayout>} />
-        <Route path="/signUp" element={<AuthLayout><SignUp /></AuthLayout>} />
-
+        <Route path="/signup" element={<AuthLayout><SignUp /></AuthLayout>} />
+        <Route path="/signup/complete" element={<AuthLayout><SignUpComplete /></AuthLayout>} />
         {/* 기본 레이아웃을 사용하는 페이지 */}
         <Route path="/" element={<DefaultLayout><Home /></DefaultLayout>} />
         <Route path="/profileEdit" element={<DefaultLayout><ProfileEdit /></DefaultLayout>} />
         <Route path="/mypage/:id" element={<DefaultLayout><MyPage /></DefaultLayout>} />
-        <Route path="/writeboard" element={<DefaultLayout><WriteBoard /></DefaultLayout>} />
         <Route path="/categories" element={<DefaultLayout><Categories /></DefaultLayout>} />
+        <Route path="/portfolio/list" element={<DefaultLayout><PortfolioList /></DefaultLayout>} />
+        <Route path="/portfolio/:id" element={<DefaultLayout><PortfolioDetail /></DefaultLayout>} />
         {/* ProtectedRoute로 보호되는 경로 */}
         {/* <Route path="/login" element={<ProtectedRoute component={Login} />} /> */}
 

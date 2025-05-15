@@ -75,7 +75,7 @@ function SignUp() {
       setIsLoading(true);
       // 회원가입 API 호출
       // await signUpUser(formData);
-      navigate('/signup-complete');
+      navigate('/signup/complete');
     } catch (err) {
       setError(err.message || "회원가입 중 오류가 발생했습니다.");
     } finally {
