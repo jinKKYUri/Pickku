@@ -1,28 +1,56 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { portfolios } from '../../mocks/portfolioData';
 import test1 from '../../assets/images/test1.jpg';
 
 const PortfolioList = () => {
+    const { category } = useParams();
     const navigate = useNavigate();
     const [selectedCategory, setSelectedCategory] = useState('전체');
     const [selectedSort, setSelectedSort] = useState('최신순');
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 20;
 
-    const categories = ['전체', '일러스트', '디지털아트', '수채화', '유화', '캘리그라피'];
+    const categories = {
+        '전체': 'all',
+        '캐릭터일러스트': 'character',
+        '일러스트': 'illustration',
+        '버추어3D': '3d',
+        '라이브2D': 'live2d',
+        '디자인': 'design',
+        '영상': 'video',
+        '음향': 'sound',
+        '웹툰/만화': 'webtoon',
+        '글/기타': 'other'
+    };
     const sortOptions = ['최신순', '인기순', '조회순', '가격 낮은순', '가격 높은순'];
+
+    // 카테고리 필터링
+    const filteredPortfolios = selectedCategory === 'all'
+        ? portfolios
+        : portfolios.filter(portfolio => portfolio.category === selectedCategory);
 
     // 페이지네이션을 위한 포트폴리오 데이터 분할
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = portfolios.slice(indexOfFirstItem, indexOfLastItem);
-    const totalPages = Math.ceil(portfolios.length / itemsPerPage);
+    const currentItems = filteredPortfolios.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(filteredPortfolios.length / itemsPerPage);
+
+    useEffect(() => {
+        setSelectedCategory(category);
+    }, [category]);
 
     // 페이지 변경 핸들러
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
         window.scrollTo(0, 0);
+    };
+
+    // 카테고리 변경 시 페이지 초기화
+    const handleCategoryChange = (category) => {
+        // setSelectedCategory(category);
+        navigate(`/portfolio/category/${categories[category]}`);
+        setCurrentPage(1);
     };
 
     return (
@@ -46,12 +74,12 @@ const PortfolioList = () => {
 
                 {/* 카테고리 필터 */}
                 <div className="flex flex-wrap gap-4 mb-8">
-                    {categories.map((category) => (
+                    {Object.keys(categories).map((category) => (
                         <button
                             key={category}
-                            onClick={() => setSelectedCategory(category)}
+                            onClick={() => handleCategoryChange(category)}
                             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors
-                                ${selectedCategory === category
+                                ${selectedCategory === categories[category]
                                     ? 'bg-blue-600 text-white'
                                     : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
                                 }`}
@@ -67,7 +95,7 @@ const PortfolioList = () => {
                         <div
                             key={portfolio.id}
                             className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
-                            onClick={() => navigate(`/portfolio/${portfolio.id}`)}
+                            onClick={() => navigate(`/portfolio/detail/${portfolio.id}`)}
                         >
                             {/* 썸네일 이미지 */}
                             <div className="relative">
@@ -76,9 +104,9 @@ const PortfolioList = () => {
                                     alt={portfolio.title}
                                     className="w-full h-48 object-cover"
                                 />
-                                <div className="absolute top-4 right-4 bg-white px-3 py-1 rounded-full text-sm font-medium text-gray-700">
+                                {/* <div className="absolute top-4 right-4 bg-white px-3 py-1 rounded-full text-sm font-medium text-gray-700">
                                     {portfolio.category}
-                                </div>
+                                </div> */}
                             </div>
 
                             {/* 포트폴리오 정보 */}

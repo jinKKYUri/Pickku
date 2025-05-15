@@ -211,6 +211,32 @@ function MyPage() {
                   </div>
                 )}
 
+                {/* 포트폴리오 작성 섹션 - 전문가 회원에게만 표시 */}
+                {user?.role === 'EXPERT' && (
+                  <div className="mt-6 pt-6 border-t border-gray-100">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <svg className="w-5 h-5 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                        <h3 className="text-sm font-medium text-gray-900">포트폴리오 작성</h3>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-500 mt-2">
+                      새로운 포트폴리오를 작성하고 더 많은 고객을 만나보세요.
+                    </p>
+                    <button
+                      onClick={() => navigate('/portfolio/write')}
+                      className="mt-4 w-full px-4 py-2 bg-pink-500 text-white rounded-md hover:bg-pink-600 transition-colors flex items-center justify-center gap-2"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                      </svg>
+                      <span>새 포트폴리오 작성</span>
+                    </button>
+                  </div>
+                )}
+
                 {/* 계정 설정 버튼들 */}
                 <div className="mt-6 space-y-3">
                   <button

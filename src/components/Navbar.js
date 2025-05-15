@@ -2,19 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { checkToken } from "../services/AuthService";
-
-const categories = [
-  { name: "캐릭터 일러스트", path: "/category/character" },
-  { name: "일러스트", path: "/category/illustration" },
-  { name: "버추어 3D", path: "/category/3d" },
-  { name: "영상", path: "/category/video" },
-  { name: "음향", path: "/category/audio" },
-];
-
-const mainMenu = [
-  { name: "디자인 요청", path: "/request" },
-  { name: "고객 후기", path: "/reviews" },
-];
+import { categories } from "../mocks/menuData";
+import { mainMenu } from "../mocks/menuData";
 
 function SearchModal({ isOpen, onClose, searchQuery, setSearchQuery }) {
   if (!isOpen) return null;

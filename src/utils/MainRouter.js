@@ -14,6 +14,7 @@ import AuthLayout from "../components/layouts/AuthLayout";
 import ScrollToTop from "../components/ScrollToTop";
 import PortfolioList from "../pages/portfolio/PortfolioList";
 import PortfolioDetail from "../pages/portfolio/Detail";
+import PortfolioWrite from "../pages/portfolio/Write";
 
 // import ProtectedRoute from './ProtectedRoute';
 function MainRouter() {
@@ -30,8 +31,10 @@ function MainRouter() {
         <Route path="/profileEdit" element={<DefaultLayout><ProfileEdit /></DefaultLayout>} />
         <Route path="/mypage/:id" element={<DefaultLayout><MyPage /></DefaultLayout>} />
         <Route path="/categories" element={<DefaultLayout><Categories /></DefaultLayout>} />
-        <Route path="/portfolio/list" element={<DefaultLayout><PortfolioList /></DefaultLayout>} />
-        <Route path="/portfolio/:id" element={<DefaultLayout><PortfolioDetail /></DefaultLayout>} />
+        {/* <Route path="/portfolio" element={<DefaultLayout><PortfolioList /></DefaultLayout>} /> */}
+        <Route path="/portfolio/category/:category" element={<DefaultLayout><PortfolioList /></DefaultLayout>} />
+        <Route path="/portfolio/detail/:id" element={<DefaultLayout><PortfolioDetail /></DefaultLayout>} />
+        <Route path="/portfolio/write" element={<DefaultLayout><PortfolioWrite /></DefaultLayout>} />
         {/* ProtectedRoute로 보호되는 경로 */}
         {/* <Route path="/login" element={<ProtectedRoute component={Login} />} /> */}
 
