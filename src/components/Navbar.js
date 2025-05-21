@@ -95,8 +95,8 @@ function SearchModal({ isOpen, onClose, searchQuery, setSearchQuery }) {
 }
 
 function Navbar() {
-  const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
@@ -105,22 +105,22 @@ function Navbar() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // localStorage에서 사용자 정보 확인
-    const userInfo = localStorage.getItem('userInfo');
+    // 로그인 상태 및 사용자 정보 확인
     const token = localStorage.getItem('token');
+    const storedUserInfo = localStorage.getItem('userInfo');
 
-    if (userInfo && token) {
-      const parsedUserInfo = JSON.parse(userInfo);
-      setUser(parsedUserInfo);
+    if (token && storedUserInfo) {
       setIsLoggedIn(true);
+      setUserInfo(JSON.parse(storedUserInfo));
     }
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userInfo');
-    setUser(null);
     setIsLoggedIn(false);
+    setUserInfo(null);
+    setIsMenuOpen(false);
     navigate('/');
   };
 
@@ -133,10 +133,11 @@ function Navbar() {
 
   // 마이페이지 URL 생성 함수
   const getMyPageUrl = () => {
-    if (!user) return '/mypage';
+    if (!userInfo) return '/mypage';
     // userId가 있으면 그것을 사용하고, 없으면 id를 사용
-    const pageId = user.userId || user.id;
-    return `/mypage/${user.role === 'EXPERT' ? 'expert123' : 'user123'}`;
+    const pageId = userInfo.id;
+    //return `/mypage/${userInfo.role === 'EXPERT' ? 'expert123' : 'user123'}`;
+    return `/mypage/${pageId}`;
   };
 
   return (
@@ -200,9 +201,9 @@ function Navbar() {
                     className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-lg"
                   >
                     <div className="w-8 h-8 rounded-lg bg-gray-200 flex items-center justify-center">
-                      {user?.profileImage ? (
+                      {userInfo?.profileImage ? (
                         <img
-                          src={user.profileImage}
+                          src={userInfo.profileImage}
                           alt="프로필"
                           className="w-full h-full rounded-lg object-cover"
                         />
@@ -212,7 +213,7 @@ function Navbar() {
                         </svg>
                       )}
                     </div>
-                    <span className="text-sm font-medium text-gray-700">{user?.nickname || 'test'}</span>
+                    <span className="text-sm font-medium text-gray-700">{userInfo?.nickname || '사용자'}</span>
                     <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                     </svg>
@@ -376,9 +377,9 @@ function Navbar() {
                     <>
                       <div className="flex items-center gap-3 px-3 py-2">
                         <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">
-                          {user?.profileImage ? (
+                          {userInfo?.profileImage ? (
                             <img
-                              src={user.profileImage}
+                              src={userInfo.profileImage}
                               alt="프로필"
                               className="w-full h-full rounded-lg object-cover"
                             />
@@ -388,7 +389,7 @@ function Navbar() {
                             </svg>
                           )}
                         </div>
-                        <span className="text-base font-medium text-gray-700">{user?.nickname || 'test'}</span>
+                        <span className="text-base font-medium text-gray-700">{userInfo?.nickname || '사용자'}</span>
                       </div>
                       <Link
                         to={getMyPageUrl()}
