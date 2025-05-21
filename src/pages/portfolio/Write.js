@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-const PortfolioWrite = () => {
+function PortfolioWrite() {
     const navigate = useNavigate();
     const [mainImages, setMainImages] = useState([]);
     const [formData, setFormData] = useState({

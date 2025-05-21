@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { signUpUser } from "../services/AuthService";
+import { signUp } from "../services/AuthService";
 
 //회원가입
 function SignUp() {
@@ -74,8 +74,13 @@ function SignUp() {
     try {
       setIsLoading(true);
       // 회원가입 API 호출
-      // await signUpUser(formData);
-      navigate('/signup/complete');
+      const response = await signUp(formData);
+
+      if (response && response.success) {
+        navigate('/signup/complete');
+      } else {
+        throw new Error(response?.message || "회원가입에 실패했습니다.");
+      }
     } catch (err) {
       setError(err.message || "회원가입 중 오류가 발생했습니다.");
     } finally {

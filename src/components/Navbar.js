@@ -1,7 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode";
-import { checkToken } from "../services/AuthService";
 import { categories } from "../mocks/menuData";
 import { mainMenu } from "../mocks/menuData";
 
