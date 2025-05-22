@@ -24,7 +24,6 @@ function Login() {
       );
       if (response.data.success) {
         setIsCodeSent(true);
-        console.log(response.data.requestId);
         setRequestId(response.data.requestId);
         alert('인증 코드가 이메일로 전송되었습니다.');
       } else {
@@ -52,8 +51,11 @@ function Login() {
         isLogin: true
       });
       if (response.data.success) {
-
-        localStorage.setItem('token', response.data.token);
+        console.log(response.data.token);
+        console.log(response.data.token.accessToken);
+        console.log(response.data.token.refreshToken);
+        localStorage.setItem('token', response.data.token.accessToken);
+        localStorage.setItem('refreshToken', response.data.token.refreshToken);
         localStorage.setItem('userInfo', JSON.stringify(response.data.userInfo));
         navigate('/');
       } else {

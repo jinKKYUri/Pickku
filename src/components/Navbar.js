@@ -136,8 +136,8 @@ function Navbar() {
     if (!userInfo) return '/mypage';
     // userId가 있으면 그것을 사용하고, 없으면 id를 사용
     const pageId = userInfo.id;
-    //return `/mypage/${userInfo.role === 'EXPERT' ? 'expert123' : 'user123'}`;
-    return `/mypage/${pageId}`;
+    // return `/mypage/${userInfo.role === 'EXPERT' ? 'expert123' : 'user123'}`;
+    return `/mypage`;
   };
 
   return (

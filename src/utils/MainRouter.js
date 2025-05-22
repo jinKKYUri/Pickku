@@ -15,6 +15,7 @@ import ScrollToTop from "../components/ScrollToTop";
 import PortfolioList from "../pages/portfolio/PortfolioList";
 import PortfolioDetail from "../pages/portfolio/Detail";
 import PortfolioWrite from "../pages/portfolio/Write";
+import ExpertRegister from '../pages/ExpertRegister';
 
 // import ProtectedRoute from './ProtectedRoute';
 function MainRouter() {
@@ -26,10 +27,11 @@ function MainRouter() {
         <Route path="/login" element={<AuthLayout><Login /></AuthLayout>} />
         <Route path="/signup" element={<AuthLayout><SignUp /></AuthLayout>} />
         <Route path="/signup/complete" element={<AuthLayout><SignUpComplete /></AuthLayout>} />
+        <Route path="/expert/register" element={<AuthLayout><ExpertRegister /></AuthLayout>} />
         {/* 기본 레이아웃을 사용하는 페이지 */}
         <Route path="/" element={<DefaultLayout><Home /></DefaultLayout>} />
         <Route path="/profileEdit" element={<DefaultLayout><ProfileEdit /></DefaultLayout>} />
-        <Route path="/mypage/:id" element={<DefaultLayout><MyPage /></DefaultLayout>} />
+        <Route path="/mypage" element={<DefaultLayout><MyPage /></DefaultLayout>} />
         <Route path="/categories" element={<DefaultLayout><Categories /></DefaultLayout>} />
         {/* <Route path="/portfolio" element={<DefaultLayout><PortfolioList /></DefaultLayout>} /> */}
         <Route path="/portfolio/category/:category" element={<DefaultLayout><PortfolioList /></DefaultLayout>} />

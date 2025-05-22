@@ -1,18 +1,54 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { normalUser, expertUser } from "../../mocks/userData";
+import axios from 'axios';
+
 
 function MyPage() {
   const { id } = useParams();
-  const [user, setUser] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
   const [showVerificationModal, setShowVerificationModal] = useState(false);
 
   useEffect(() => {
-    const isExpertUser = id.includes('expert123');
-    const selectedUser = isExpertUser ? expertUser : normalUser;
-    setUser(selectedUser);
-  }, [id]);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+
+    const fetchUserInfo = async () => {
+      try {
+        const response = await axios.get('http://wlsrb3469.iptime.org:5000/api/users/mypage', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        if (response.data.success) {
+          setUserInfo(response.data.userInfo);
+          console.log(response.data);
+        } else {
+          throw new Error(response.data.message?.error || '사용자 정보를 불러오는데 실패했습니다.');
+        }
+      } catch (error) {
+        console.error('사용자 정보 조회 실패:', error);
+        setError(error.response?.data?.message?.error || error.message || '사용자 정보를 불러오는데 실패했습니다.');
+
+        // 토큰이 만료되었거나 유효하지 않은 경우
+        if (error.response?.status === 401) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('userInfo');
+          navigate('/login');
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserInfo();
+  }, [navigate]);
 
   // 휴대폰 인증 모달
   const PhoneVerificationModal = () => {
@@ -118,9 +154,9 @@ function MyPage() {
               <section className="bg-white border rounded-lg p-6">
                 <div className="flex items-center space-x-4">
                   <div className="w-24 h-24 rounded-lg bg-gray-200 flex items-center justify-center">
-                    {user?.profileImage ? (
+                    {userInfo?.profileImage ? (
                       <img
-                        src={user.profileImage}
+                        src={userInfo.profileImage}
                         alt="프로필"
                         className="w-full h-full rounded-lg object-cover"
                       />
@@ -132,18 +168,18 @@ function MyPage() {
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-3">
-                      <h1 className="text-2xl font-semibold">{user?.nickname || user?.name || "사용자"}</h1>
-                      <span className={`px-3 py-1 text-sm rounded-full ${user?.role === 'EXPERT' ? 'bg-pink-100 text-pink-700' : 'bg-gray-100 text-gray-700'
-                        }`}>
-                        {user?.role === 'EXPERT' ? '전문가' : '일반회원'}
-                      </span>
+                      <h1 className="text-2xl font-semibold">{userInfo?.nickname || '사용자'}</h1>
                     </div>
-                    <p className="text-gray-600 mt-1">{user?.email || "이메일"}</p>
-                    {user?.role === 'EXPERT' && user?.expertInfo && (
+                    <p className="text-gray-600 mt-1">
+                      <span className={`px-3 py-1 text-sm rounded-full ${userInfo?.role === 'EXPERT' ? 'bg-pink-100 text-pink-700' : 'bg-gray-100 text-gray-700'}`}>
+                        {userInfo?.role === 'EXPERT' ? '전문가' : '의뢰인'}
+                      </span>
+                    </p>
+                    {userInfo?.role === 'EXPERT' && userInfo?.expertInfo && (
                       <div className="mt-3">
-                        <p className="text-gray-600">{user.expertInfo.career}</p>
+                        <p className="text-gray-600">{userInfo.expertInfo.career}</p>
                         <div className="flex flex-wrap gap-2 mt-2">
-                          {user.expertInfo.categories.map((category, index) => (
+                          {userInfo.expertInfo.categories.map((category, index) => (
                             <span key={index} className="px-2 py-1 bg-gray-100 text-sm rounded-md">
                               {category}
                             </span>
@@ -158,7 +194,7 @@ function MyPage() {
                 <div className="mt-6 pt-6 border-t border-gray-100">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      {user?.phoneVerified ? (
+                      {userInfo?.phoneVerified ? (
                         <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                         </svg>
@@ -169,7 +205,7 @@ function MyPage() {
                       )}
                       <h3 className="text-sm font-medium text-gray-900">휴대폰 인증</h3>
                     </div>
-                    {!user?.phoneVerified && (
+                    {!userInfo?.phoneVerified && (
                       <button
                         onClick={() => setShowVerificationModal(true)}
                         className="px-3 py-1.5 text-sm text-primary border border-primary rounded-md hover:bg-primary hover:text-white transition-colors"
@@ -179,14 +215,14 @@ function MyPage() {
                     )}
                   </div>
                   <p className="text-sm text-gray-500 mt-2">
-                    {user?.phoneVerified
+                    {userInfo?.phoneVerified
                       ? '휴대폰 인증이 완료되었습니다.'
                       : '원활한 서비스 이용을 위해 휴대폰 인증이 필요합니다.'}
                   </p>
                 </div>
 
                 {/* 전문가 계정 전환 섹션 - 일반 회원에게만 표시 */}
-                {user?.role === 'USER' && (
+                {userInfo?.role === 'USER' && (
                   <div className="mt-6 pt-6 border-t border-gray-100">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -212,7 +248,7 @@ function MyPage() {
                 )}
 
                 {/* 포트폴리오 작성 섹션 - 전문가 회원에게만 표시 */}
-                {user?.role === 'EXPERT' && (
+                {userInfo?.role === 'EXPERT' && (
                   <div className="mt-6 pt-6 border-t border-gray-100">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -248,7 +284,7 @@ function MyPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
                     </svg>
                   </button>
-                  {user?.role === 'EXPERT' && (
+                  {userInfo?.role === 'EXPERT' && (
                     <button
                       onClick={() => navigate('/expert/edit')}
                       className="w-full px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors flex items-center justify-between"
@@ -259,15 +295,6 @@ function MyPage() {
                       </svg>
                     </button>
                   )}
-                  <button
-                    onClick={() => navigate('/password/change')}
-                    className="w-full px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors flex items-center justify-between"
-                  >
-                    <span>비밀번호 변경</span>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
                 </div>
               </section>
             </div>
@@ -276,7 +303,7 @@ function MyPage() {
           {/* 메인 콘텐츠 영역 */}
           <div className="md:w-2/3">
             {/* 전문가 포트폴리오 섹션 */}
-            {user?.role === 'EXPERT' && (
+            {userInfo?.role === 'EXPERT' && (
               <section className="bg-white border rounded-lg p-6 mb-8">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-xl font-semibold">포트폴리오</h2>
@@ -287,9 +314,9 @@ function MyPage() {
                     수정
                   </button>
                 </div>
-                {user?.expertInfo?.portfolio ? (
+                {userInfo?.expertInfo?.portfolio ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {user.expertInfo.portfolio.map((item) => (
+                    {userInfo.expertInfo.portfolio.map((item) => (
                       <div key={item.id} className="aspect-square bg-gray-100 rounded-lg p-4">
                         <h3 className="font-medium">{item.title}</h3>
                         <p className="text-sm text-gray-600 mt-1">{item.description}</p>
@@ -306,11 +333,11 @@ function MyPage() {
             <section className="bg-white border rounded-lg p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-semibold">
-                  {user?.role === 'EXPERT' ? '진행중인 프로젝트' : '의뢰한 프로젝트'}
+                  {userInfo?.role === 'EXPERT' ? '진행중인 프로젝트' : '의뢰한 프로젝트'}
                 </h2>
               </div>
               <div className="grid grid-cols-1 gap-4">
-                {user?.projects.map((project) => (
+                {/* {userInfo?.projects.map((project) => (
                   <div key={project.id} className="border rounded-lg overflow-hidden">
                     <div className="p-4 border-l-4 border-l-gray-200">
                       <div className="flex items-center justify-between mb-2">
@@ -334,7 +361,7 @@ function MyPage() {
                       </div>
                     </div>
                   </div>
-                ))}
+                ))} */}
               </div>
             </section>
           </div>
